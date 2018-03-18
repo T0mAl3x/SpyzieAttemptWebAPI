@@ -1,29 +1,33 @@
-﻿using System;
+﻿using SilentWeb.Models;
+using System;
+using System.Linq;
 using System.Web.Http;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace SilentWeb.Controllers
 {
     public class ServiceController : ApiController
     {
         [HttpPost]
-        public void Post([FromBody] XElement value)
+        public string RegisterPhone([FromBody] PhoneRegistrationModel value)
         {
+            
+            string securityToken = RandomString();
+            securityToken = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(securityToken));
 
-            XmlSerializer serializer = new XmlSerializer(typeof(Test));
-            var test = (Test)serializer.Deserialize(value.CreateReader());
-
-            Console.WriteLine(test.Text);
+            return MakeUrlSafe(securityToken);
         }
 
-        [XmlRoot("Test")]
-        public class Test
+        private string RandomString()
         {
-            [XmlElement("Id")]
-            public int Id { get; set; }
-            [XmlElement("Text")]
-            public string Text { get; set; }
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+            return new string(Enumerable.Repeat(chars, 32)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private string MakeUrlSafe(string securityToken)
+        {
+            return securityToken.Replace('+', '-').Replace('/', '_');
         }
     }
 }
