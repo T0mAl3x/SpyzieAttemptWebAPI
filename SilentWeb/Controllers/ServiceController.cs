@@ -1,5 +1,8 @@
-﻿using SilentWeb.Models;
+﻿using DataLayer;
+using SilentWeb.Models;
+using SilentWeb.Services;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Web.Http;
 
@@ -10,11 +13,12 @@ namespace SilentWeb.Controllers
         [HttpPost]
         public string RegisterPhone([FromBody] PhoneRegistrationModel value)
         {
-            
             string securityToken = RandomString();
-            securityToken = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(securityToken));
+            string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
+            SqlHelper.RegisterPhone(connectionString, Base64Helper.Decode(value.IMEI), Base64Helper.Decode(value.Manufacturer),
+                Base64Helper.Decode(value.Model), securityToken, Base64Helper.Decode(value.Username));
 
-            return MakeUrlSafe(securityToken);
+            return Base64Helper.Encode(securityToken);
         }
 
         private string RandomString()
@@ -23,11 +27,6 @@ namespace SilentWeb.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
             return new string(Enumerable.Repeat(chars, 32)
               .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        private string MakeUrlSafe(string securityToken)
-        {
-            return securityToken.Replace('+', '-').Replace('/', '_');
         }
     }
 }

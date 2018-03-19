@@ -9,7 +9,8 @@ namespace DataLayer
     {
         public static void RegisterPhone(string connectionString, string IMEI, string manufacturer, string model, string secToken, string username)
         {
-            using (SqlCommand command = new SqlCommand("PhoneRegistration", ConnectionManagement.getInstance(connectionString).GetConnection()))
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+            using (SqlCommand command = new SqlCommand("PhoneRegistration", connection.GetConnection()))
             {
                 try
                 {
@@ -67,8 +68,11 @@ namespace DataLayer
                         Direction = ParameterDirection.Input
                     };
                     command.Parameters.Add(parameter);
+                    connection.openConnection();
                     command.ExecuteNonQuery();
-                } catch (Exception ex)
+                    connection.closeConnection();
+                }
+                catch (SqlException ex)
                 {
 
                 }
