@@ -36,7 +36,7 @@ namespace DataLayer
                     parameter = new SqlParameter()
                     {
                         ParameterName = "@Model",
-                        Value = manufacturer,
+                        Value = model,
                         SqlDbType = SqlDbType.NVarChar,
                         Direction = ParameterDirection.Input
                     };
@@ -54,7 +54,7 @@ namespace DataLayer
                     parameter = new SqlParameter()
                     {
                         ParameterName = "@Mask",
-                        Value = "000000000",
+                        Value = "00000000",
                         SqlDbType = SqlDbType.Char,
                         Direction = ParameterDirection.Input
                     };
