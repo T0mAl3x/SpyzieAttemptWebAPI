@@ -6,6 +6,7 @@ namespace DataLayer.Models
 {
     public class BulkDataModel
     {
+        public PhoneAuthenticationModel Authentication { get; set; }
         public LocationModel Location { get; set; }
     }
 }
