@@ -36,5 +36,20 @@ namespace DataLayer
 
             return false;
         }
+
+        public static bool CheckCalls(CallHistoryModel callHistory)
+        {
+            if(callHistory == null)
+            {
+                return false;
+            }
+
+            if (callHistory.Calls != null && callHistory.Hash != 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

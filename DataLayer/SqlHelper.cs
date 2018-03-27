@@ -294,6 +294,34 @@ namespace DataLayer
                         }
                     }
                 }
+                if (DataChecker.CheckCalls(bulkData.CallHistory))
+                {
+                    using(SqlCommand command = new SqlCommand("InsertCallHistory", connection.GetConnection()))
+                    {
+                        try
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = bulkData.Authentication.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            //TODO: continua!
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.closeConnection();
+                        }
+                    }
+                }
                 return "";
             }
             else
