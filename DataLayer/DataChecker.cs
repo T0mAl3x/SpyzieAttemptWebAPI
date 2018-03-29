@@ -14,7 +14,7 @@ namespace DataLayer
                 return false;
             }
 
-            if (location.Latitude != null && location.Longitude != null && location.Hash != 0)
+            if (location.Latitude != null && location.Longitude != null && location.Hash != null)
             {
                 return true;
             }
@@ -44,7 +44,7 @@ namespace DataLayer
                 return false;
             }
 
-            if (callHistory.Calls != null && callHistory.Hash != 0)
+            if (callHistory.Calls != null && callHistory.Hash != null)
             {
                 return true;
             }

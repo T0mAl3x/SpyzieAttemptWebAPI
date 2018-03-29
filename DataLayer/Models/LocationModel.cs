@@ -8,6 +8,6 @@ namespace DataLayer.Models
     {
         public string Latitude { get; set; }
         public string Longitude { get; set; }
-        public int Hash { get; set; }
+        public string Hash { get; set; }
     }
 }

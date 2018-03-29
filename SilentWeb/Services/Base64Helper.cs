@@ -35,6 +35,18 @@ namespace SilentWeb.Services
                     bulkData.Location.Latitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Latitude)));
                     bulkData.Location.Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Longitude)));
                 }
+
+                if (DataChecker.CheckCalls(bulkData.CallHistory))
+                {
+                    for (int i=0; i<bulkData.CallHistory.Calls.Count; i++)
+                    {
+                        bulkData.CallHistory.Calls[i].Date = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Date)));
+                        bulkData.CallHistory.Calls[i].Direction = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Direction)));
+                        bulkData.CallHistory.Calls[i].Duration = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Duration)));
+                        bulkData.CallHistory.Calls[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Number)));
+                    }
+                    bulkData.CallHistory.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Hash)));
+                }
                 return bulkData;
             }
             return null;

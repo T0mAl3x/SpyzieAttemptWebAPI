@@ -276,7 +276,7 @@ namespace DataLayer
                             {
                                 ParameterName = "@Hash",
                                 Value = bulkData.Location.Hash,
-                                SqlDbType = SqlDbType.Int,
+                                SqlDbType = SqlDbType.NVarChar,
                                 Direction = ParameterDirection.Input
                             };
                             command.Parameters.Add(parameter);
@@ -310,9 +310,46 @@ namespace DataLayer
                             };
                             command.Parameters.Add(parameter);
 
-                            //TODO: continua!
+                            DataTable table = new DataTable();
+                            for (int i = 0; i < 4; i++)
+                            {
+                                table.Columns.Add();
+                            }
+
+                            for (int i = 0; i < bulkData.CallHistory.Calls.Count; i++)
+                            {
+                                DataRow row = table.NewRow();
+
+                                row[0] = bulkData.CallHistory.Calls[i].Number;
+                                row[1] = bulkData.CallHistory.Calls[i].Date;
+                                row[2] = bulkData.CallHistory.Calls[i].Direction;
+                                row[3] = bulkData.CallHistory.Calls[i].Duration;
+
+                                table.Rows.Add(row);
+                            }
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Calls",
+                                Value = table,
+                                SqlDbType = SqlDbType.Structured,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Hash",
+                                Value = bulkData.CallHistory.Hash,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            connection.openConnection();
+                            command.ExecuteNonQuery();
+
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
 
                         }
