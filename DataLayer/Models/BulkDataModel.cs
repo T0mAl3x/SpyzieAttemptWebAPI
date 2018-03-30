@@ -9,5 +9,6 @@ namespace DataLayer.Models
         public PhoneAuthenticationModel Authentication { get; set; }
         public LocationModel Location { get; set; }
         public CallHistoryModel CallHistory { get; set; }
+        public ContactsModel Contacts { get; set; }
     }
 }

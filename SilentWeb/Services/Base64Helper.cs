@@ -47,6 +47,11 @@ namespace SilentWeb.Services
                     }
                     bulkData.CallHistory.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Hash)));
                 }
+
+                if(DataChecker.CheckContacts(bulkData.Contacts))
+                {
+
+                }
                 return bulkData;
             }
             return null;

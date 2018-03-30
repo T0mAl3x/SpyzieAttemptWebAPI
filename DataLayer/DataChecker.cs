@@ -51,5 +51,20 @@ namespace DataLayer
 
             return false;
         }
+
+        public static bool CheckContacts(ContactsModel contacts)
+        {
+            if (contacts == null)
+            {
+                return false;
+            }
+
+            if (contacts.ContactList != null && contacts.Hash != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
