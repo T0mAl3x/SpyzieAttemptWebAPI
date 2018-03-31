@@ -34,11 +34,12 @@ namespace SilentWeb.Services
                 {
                     bulkData.Location.Latitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Latitude)));
                     bulkData.Location.Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Longitude)));
+                    bulkData.Location.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Hash)));
                 }
 
                 if (DataChecker.CheckCalls(bulkData.CallHistory))
                 {
-                    for (int i=0; i<bulkData.CallHistory.Calls.Count; i++)
+                    for (int i = 0; i < bulkData.CallHistory.Calls.Count; i++)
                     {
                         bulkData.CallHistory.Calls[i].Date = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Date)));
                         bulkData.CallHistory.Calls[i].Direction = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Direction)));
@@ -48,9 +49,14 @@ namespace SilentWeb.Services
                     bulkData.CallHistory.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Hash)));
                 }
 
-                if(DataChecker.CheckContacts(bulkData.Contacts))
+                if (DataChecker.CheckContacts(bulkData.Contacts))
                 {
-
+                    for (int i = 0; i < bulkData.Contacts.ContactList.Count; i++)
+                    {
+                        bulkData.Contacts.ContactList[i].Name = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Contacts.ContactList[i].Name)));
+                        bulkData.Contacts.ContactList[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Contacts.ContactList[i].Number)));
+                    }
+                    bulkData.Contacts.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Contacts.Hash)));
                 }
                 return bulkData;
             }

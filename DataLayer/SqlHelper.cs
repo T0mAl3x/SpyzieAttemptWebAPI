@@ -359,6 +359,69 @@ namespace DataLayer
                         }
                     }
                 }
+                if (DataChecker.CheckContacts(bulkData.Contacts))
+                {
+                    using (SqlCommand command = new SqlCommand("InsertContacts", connection.GetConnection()))
+                    {
+                        try
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = bulkData.Authentication.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            DataTable table = new DataTable();
+                            for (int i = 0; i < 3; i++)
+                            {
+                                table.Columns.Add();
+                            }
+
+                            for (int i = 0; i < bulkData.Contacts.ContactList.Count; i++)
+                            {
+                                DataRow row = table.NewRow();
+
+                                row[0] = bulkData.Contacts.ContactList[i].Number;
+                                row[1] = bulkData.Contacts.ContactList[i].Name;
+                                row[2] = bulkData.Contacts.ContactList[i].Picture;
+
+                                table.Rows.Add(row);
+                            }
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Contacts",
+                                Value = table,
+                                SqlDbType = SqlDbType.Structured,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Hash",
+                                Value = bulkData.Contacts.Hash,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            connection.openConnection();
+                            command.ExecuteNonQuery();
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.closeConnection();
+                        }
+                    }
+                }
                 return "";
             }
             else
