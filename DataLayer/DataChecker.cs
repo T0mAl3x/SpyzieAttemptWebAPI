@@ -66,5 +66,20 @@ namespace DataLayer
 
             return false;
         }
+
+        public static bool CheckMessages(MessagesModel messages)
+        {
+            if (messages == null)
+            {
+                return false;
+            }
+
+            if (messages.Messages != null && messages.Hash != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
