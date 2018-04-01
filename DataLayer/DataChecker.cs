@@ -81,5 +81,20 @@ namespace DataLayer
 
             return false;
         }
+
+        public static bool CheckTrafic(TraficModel trafic)
+        {
+            if (trafic == null)
+            {
+                return false;
+            }
+
+            if (trafic.Trafic != null && trafic.Hash != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
