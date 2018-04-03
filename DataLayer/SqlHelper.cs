@@ -376,8 +376,8 @@ namespace DataLayer
                             {
                                 DataRow row = table.NewRow();
 
-                                row[0] = bulkData.Contacts.ContactList[i].Number;
-                                row[1] = bulkData.Contacts.ContactList[i].Name;
+                                row[0] = bulkData.Contacts.ContactList[i].Name;
+                                row[1] = bulkData.Contacts.ContactList[i].Number;
                                 row[2] = bulkData.Contacts.ContactList[i].Picture;
 
                                 table.Rows.Add(row);
@@ -526,6 +526,174 @@ namespace DataLayer
                             connection.openConnection();
                             command.ExecuteNonQuery();
 
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.closeConnection();
+                        }
+                    }
+                }
+
+                if (DataChecker.CheckApplications(bulkData.Applications))
+                {
+                    using (SqlCommand command = new SqlCommand("InsertApplications", connection.GetConnection()))
+                    {
+                        try
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = bulkData.Authentication.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            DataTable table = new DataTable();
+                            for (int i = 0; i < 2; i++)
+                            {
+                                table.Columns.Add();
+                            }
+
+                            for (int i = 0; i < bulkData.Applications.Applications.Count; i++)
+                            {
+                                DataRow row = table.NewRow();
+
+                                row[0] = bulkData.Applications.Applications[i].Name;
+                                row[1] = bulkData.Applications.Applications[i].Icon;
+
+                                table.Rows.Add(row);
+                            }
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Applications",
+                                Value = table,
+                                SqlDbType = SqlDbType.Structured,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Hash",
+                                Value = bulkData.Applications.Hash,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            connection.openConnection();
+                            command.ExecuteNonQuery();
+                        }
+                        catch(Exception  ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.closeConnection();
+                        }
+                    }
+                }
+
+                if (bulkData.BatteryLevel != -1)
+                {
+                    using (SqlCommand command = new SqlCommand("InsertBatteryLevel", connection.GetConnection()))
+                    {
+                        try
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = bulkData.Authentication.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Level",
+                                Value = bulkData.BatteryLevel,
+                                SqlDbType = SqlDbType.Float,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            connection.openConnection();
+                            command.ExecuteNonQuery();
+
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.closeConnection();
+                        }
+                    }
+                }
+
+                if (DataChecker.CheckPhotos(bulkData.Photos))
+                {
+                    using (SqlCommand command = new SqlCommand("InsertPhotos", connection.GetConnection()))
+                    {
+                        try
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = bulkData.Authentication.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            DataTable table = new DataTable();
+                            for (int i = 0; i < 4; i++)
+                            {
+                                table.Columns.Add();
+                            }
+
+                            for (int i = 0; i < bulkData.Photos.Photos.Count; i++)
+                            {
+                                DataRow row = table.NewRow();
+
+                                row[0] = bulkData.Photos.Photos[i].Image;
+                                row[1] = bulkData.Photos.Photos[i].Date;
+                                row[2] = bulkData.Photos.Photos[i].Latitude;
+                                row[3] = bulkData.Photos.Photos[i].Longitude;
+
+                                table.Rows.Add(row);
+                            }
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Photos",
+                                Value = table,
+                                SqlDbType = SqlDbType.Structured,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Hash",
+                                Value = bulkData.Photos.Hash,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            connection.openConnection();
+                            command.ExecuteNonQuery();
                         }
                         catch (Exception ex)
                         {

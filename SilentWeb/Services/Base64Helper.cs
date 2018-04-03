@@ -74,6 +74,24 @@ namespace SilentWeb.Services
                     bulkData.Trafic.Trafic = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Trafic.Trafic)));
                     bulkData.Trafic.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Trafic.Hash)));
                 }
+
+                if (DataChecker.CheckApplications(bulkData.Applications))
+                {
+                    for (int i = 0; i < bulkData.Applications.Applications.Count; i++)
+                    {
+                        bulkData.Applications.Applications[i].Name = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Applications.Applications[i].Name)));
+                    }
+                }
+
+                if (DataChecker.CheckPhotos(bulkData.Photos))
+                {
+                    for (int i=0; i<bulkData.Photos.Photos.Count; i++)
+                    {
+                        bulkData.Photos.Photos[i].Date = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Photos.Photos[i].Date)));
+                        bulkData.Photos.Photos[i].Latitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Photos.Photos[i].Latitude)));
+                        bulkData.Photos.Photos[i].Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Photos.Photos[i].Longitude)));
+                    }
+                }
                 return bulkData;
             }
             return null;

@@ -96,5 +96,35 @@ namespace DataLayer
 
             return false;
         }
+
+        public static bool CheckApplications(ApplicationsModel applications)
+        {
+            if (applications == null)
+            {
+                return false;
+            }
+
+            if (applications.Applications != null && applications.Hash != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool CheckPhotos(PhotosModel photos)
+        {
+            if (photos == null)
+            {
+                return false;
+            }
+
+            if (photos.Photos != null && photos.Hash != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
