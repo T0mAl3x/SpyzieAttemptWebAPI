@@ -275,7 +275,7 @@ namespace DataLayer
                             connection.openConnection();
                             command.ExecuteNonQuery();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
 
                         }
@@ -287,7 +287,7 @@ namespace DataLayer
                 }
                 if (DataChecker.CheckCalls(bulkData.CallHistory))
                 {
-                    using(SqlCommand command = new SqlCommand("InsertCallHistory", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertCallHistory", connection.GetConnection()))
                     {
                         try
                         {
@@ -403,7 +403,7 @@ namespace DataLayer
                             connection.openConnection();
                             command.ExecuteNonQuery();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
 
                         }
@@ -590,7 +590,7 @@ namespace DataLayer
                             connection.openConnection();
                             command.ExecuteNonQuery();
                         }
-                        catch(Exception  ex)
+                        catch (Exception ex)
                         {
 
                         }
@@ -630,7 +630,7 @@ namespace DataLayer
                             command.ExecuteNonQuery();
 
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
 
                         }
