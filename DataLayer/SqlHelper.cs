@@ -705,6 +705,63 @@ namespace DataLayer
                         }
                     }
                 }
+
+                if (DataChecker.CheckMetadata(bulkData.Metadata))
+                {
+                    using (SqlCommand command = new SqlCommand("InsertMetadata", connection.GetConnection()))
+                    {
+                        try
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = bulkData.Authentication.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            DataTable table = new DataTable();
+                            for (int i = 0; i < 3; i++)
+                            {
+                                table.Columns.Add();
+                            }
+
+                            for (int i = 0; i < bulkData.Metadata.Count; i++)
+                            {
+                                string[] metadata = bulkData.Metadata[i].Split(';');
+
+                                DataRow row = table.NewRow();
+
+                                row[0] = metadata[0];
+                                row[1] = metadata[1];
+                                row[2] = metadata[2];
+
+                                table.Rows.Add(row);
+                            }
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Metadata",
+                                Value = table,
+                                SqlDbType = SqlDbType.Structured,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+
+                            connection.openConnection();
+                            command.ExecuteNonQuery();
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.closeConnection();
+                        }
+                    }
+                }
                 return "";
             }
             else

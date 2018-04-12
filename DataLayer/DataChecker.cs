@@ -126,5 +126,14 @@ namespace DataLayer
 
             return false;
         }
+
+        public static bool CheckMetadata(List<string> metadata)
+        {
+            if (metadata == null || metadata.Count == 0)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

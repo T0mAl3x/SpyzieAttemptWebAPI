@@ -20,5 +20,6 @@ namespace DataLayer.Models
         public ApplicationsModel Applications { get; set; }
         public float BatteryLevel { get; set; }
         public PhotosModel Photos { get; set; }
+        public List<string> Metadata { get; set; }
     }
 }

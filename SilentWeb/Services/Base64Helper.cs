@@ -92,6 +92,13 @@ namespace SilentWeb.Services
                         bulkData.Photos.Photos[i].Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Photos.Photos[i].Longitude)));
                     }
                 }
+
+                if (DataChecker.CheckMetadata(bulkData.Metadata))
+                {
+                    for(int i = 0; i<bulkData.Metadata.Count; i++) {
+                        bulkData.Metadata[i] = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Metadata[i])));
+                    }
+                }
                 return bulkData;
             }
             return null;
