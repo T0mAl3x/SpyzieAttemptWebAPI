@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using DataLayer.Models;
+using System.Text.RegularExpressions;
 
 namespace DataLayer
 {
@@ -212,6 +213,76 @@ namespace DataLayer
                 return "Authentication failed";
             }
             
+        }
+
+        public static DataTable GetSpecificInformation(string connectionString, string IMEI, string storedProcedure)
+        {
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+            DataTable table = new DataTable();
+            using (SqlCommand command = new SqlCommand(storedProcedure, connection.GetConnection()))
+            {
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
+                    {
+                        ParameterName = "@IMEI",
+                        Value = IMEI,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    connection.openConnection();
+                    SqlDataReader reader = command.ExecuteReader();
+                    table.Load(reader);
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connection.closeConnection();
+                }
+            }
+            return table;
+        }
+
+        public static DataTable GetSmartphones(string connectionString, string username)
+        {
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+            DataTable table = new DataTable();
+            using (SqlCommand command = new SqlCommand("GetSmartphones", connection.GetConnection()))
+            {
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Username",
+                        Value = username,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    connection.openConnection();
+                    SqlDataReader reader = command.ExecuteReader();
+                    table.Load(reader);
+                    reader.Close();
+                }
+                catch(Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connection.closeConnection();
+                }
+            }
+            return table;
         }
 
         public static string GatherData(string connectionString, BulkDataModel bulkData)

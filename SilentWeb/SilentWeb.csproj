@@ -214,6 +214,10 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
     <Content Include="Smartphones.aspx" />
+    <Content Include="ToolPages\LocationHistory.aspx" />
+    <Content Include="ToolPages\Metadata.aspx" />
+    <Content Include="ToolPages\Smartphones.aspx" />
+    <Content Include="ToolPages\Trafic.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -292,6 +296,34 @@
     </Compile>
     <Compile Include="Smartphones.aspx.designer.cs">
       <DependentUpon>Smartphones.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\LocationHistory.aspx.cs">
+      <DependentUpon>LocationHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\LocationHistory.aspx.designer.cs">
+      <DependentUpon>LocationHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\Metadata.aspx.cs">
+      <DependentUpon>Metadata.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Metadata.aspx.designer.cs">
+      <DependentUpon>Metadata.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\Smartphones.aspx.cs">
+      <DependentUpon>Smartphones.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Smartphones.aspx.designer.cs">
+      <DependentUpon>Smartphones.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\Trafic.aspx.cs">
+      <DependentUpon>Trafic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Trafic.aspx.designer.cs">
+      <DependentUpon>Trafic.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

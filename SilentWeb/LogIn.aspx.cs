@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -26,7 +27,10 @@ namespace SilentWeb
 
             if (response)
             {
-                Session["LoggedIn"] = username;
+                HttpCookie cookie = new HttpCookie("Logged");
+                cookie["username"] = username;
+                cookie.Expires = DateTime.Now.AddDays(20);
+                Response.Cookies.Add(cookie);
                 Response.Redirect("Default.aspx");
             }
             else

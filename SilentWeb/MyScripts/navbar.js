@@ -7,3 +7,17 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
+
+$(document).ready(function () {
+    $('#smartphonesTable tr').click(function () {
+        var counter = 0;
+        $(this).find('td').each(function (column, td) {
+            if (counter === 2) {
+                document.getElementById("smartphonesInput").value = td.innerText;
+            }
+            counter = counter + 1;
+        });          
+        
+        document.getElementById("smartphonesForm").submit();
+    });
+});
