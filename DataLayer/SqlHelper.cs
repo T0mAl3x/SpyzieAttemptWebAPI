@@ -601,7 +601,7 @@ namespace DataLayer
                     }
                 }
 
-                if (bulkData.BatteryLevel != -1)
+                if (bulkData.BatteryLevel != 0)
                 {
                     using (SqlCommand command = new SqlCommand("InsertBatteryLevel", connection.GetConnection()))
                     {
@@ -767,6 +767,148 @@ namespace DataLayer
             else
             {
                 return "Authentication failed";
+            }
+        }
+
+        public static string RegisterUser(string connectionString, string firstname, string lastname, string username, string password, string email)
+        {
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+
+            bool sqlResponse = true;
+            using (SqlCommand command = new SqlCommand("InsertUser", connection.GetConnection()))
+            {
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Firstname",
+                        Value = firstname,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Lastname",
+                        Value = lastname,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Username",
+                        Value = username,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Password",
+                        Value = password,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Email",
+                        Value = email,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Out",
+                        SqlDbType = SqlDbType.Bit,
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(parameter);
+
+                    connection.openConnection();
+                    command.ExecuteNonQuery();
+
+                    sqlResponse = (bool) command.Parameters["@Out"].Value;
+                }
+                catch(Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connection.closeConnection();
+                }
+            }
+
+            if (sqlResponse)
+            {
+                return "Ok";
+            }
+            else
+            {
+                return "Already registered";
+            }
+        }
+
+        public static bool LogInUser(string connectionString, string username, string password)
+        {
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+
+            bool sqlResponse = true;
+            using (SqlCommand command = new SqlCommand("LogInUser", connection.GetConnection()))
+            {
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Username",
+                        Value = username,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Password",
+                        Value = password,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Out",
+                        SqlDbType = SqlDbType.Bit,
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(parameter);
+
+                    connection.openConnection();
+                    command.ExecuteNonQuery();
+
+                    sqlResponse = (bool)command.Parameters["@Out"].Value;
+                }
+                catch(Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connection.closeConnection();
+                }
+
+                return sqlResponse;
             }
         }
     }

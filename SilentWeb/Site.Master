@@ -6,14 +6,15 @@
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - My ASP.NET Application</title>
+    <title><%: Page.Title %> - Silent</title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Pictures/logo.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/MyCss/navbar.css" rel="stylesheet" type="text/css" >
 
 </head>
 <body>
@@ -47,26 +48,61 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/">Application name</a>
+                    <a class="navbar-brand" runat="server" href="~/">Silent</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/Default">Home</a></li>
                         <li><a runat="server" href="~/About">About</a></li>
                         <li><a runat="server" href="~/Contact">Contact</a></li>
+                        <% if (Session["LoggedIn"] != null)
+                            {
+                                Response.Write("<li><a runat='server' onclick='openNav()' class='btn btn-info'>Tools</a></li>");
+                            }
+                        %>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <% if (Session["LoggedIn"] == null)
+                            {
+                                Response.Write("<li><a runat='server' href='LogIn'>Log in</a></li>");
+                            }
+                            else
+                            {
+                                Response.Write("<li><a runat=server href=Default onclick='LogOut()'>Log out</a></li>");
+                            }
+                        %>
+                        
+                        <li><a runat="server" href="~/Register">Register</a></li>
                     </ul>
                 </div>
             </div>
+        </div>
+        <div id="mySidenav" class="sidenav">
+          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+          <a href="#">Smartphones</a>
+          <a href="#">Applications</a>
+          <a href="#">Call history</a>
+          <a href="#">Contacts</a>
+          <a href="#">Location history</a>
+          <a href="#">Messages</a>
+          <a href="#">Metadata</a>
+          <a href="#">Photos</a>
+          <a href="#">Trafic</a>
         </div>
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+                <p>&copy; <%: DateTime.Now.Year %> -Silent</p>
             </footer>
         </div>
-
     </form>
+    <script src='<%= ResolveUrl("~/MyScripts/navbar.js") %>'></script>
+    <script type="text/javascript">
+        function LogOut() {
+            '<% Session.Remove("LoggedIn"); %>'
+        }
+    </script>
 </body>
 </html>

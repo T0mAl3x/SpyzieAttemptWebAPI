@@ -8,7 +8,7 @@ namespace DataLayer.Models
     {
         BulkDataModel()
         {
-            BatteryLevel = -1;
+            BatteryLevel = 0;
         }
 
         public PhoneAuthenticationModel Authentication { get; set; }
