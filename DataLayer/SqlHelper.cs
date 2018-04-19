@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using DataLayer.Models;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace DataLayer
 {
@@ -213,6 +214,120 @@ namespace DataLayer
                 return "Authentication failed";
             }
             
+        }
+
+        public static string GetUserMask(string connectionString)
+        {
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+            string mask = "";
+            using (SqlCommand command = new SqlCommand("GetUserMask", connection.GetConnection()))
+            {
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
+                    {
+                        ParameterName = "@UserMask",
+                        Size = 8,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(parameter);
+
+                    connection.openConnection();
+                    command.ExecuteNonQuery();
+
+                    mask = (string)command.Parameters["@UserMask"].Value;
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connection.closeConnection();
+                }
+
+                return mask;
+            }
+        }
+
+        public static void SetUserMask(string connectionString, StringBuilder userMask)
+        {
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+            DataTable table = new DataTable();
+
+            using (SqlCommand command = new SqlCommand("SetUserMask", connection.GetConnection()))
+            {
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
+                    {
+                        ParameterName = "@UserMask",
+                        Value = userMask.ToString(),
+                        SqlDbType = SqlDbType.Char,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    connection.openConnection();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connection.closeConnection();
+                }
+            }
+        }
+
+        public static DataTable GetConversation(string connectionString, string IMEI, string number)
+        {
+            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
+            DataTable table = new DataTable();
+
+            using (SqlCommand command = new SqlCommand("GetConversation", connection.GetConnection()))
+            {
+                try
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    SqlParameter parameter = new SqlParameter()
+                    {
+                        ParameterName = "@IMEI",
+                        Value = IMEI,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    parameter = new SqlParameter()
+                    {
+                        ParameterName = "@Number",
+                        Value = number,
+                        SqlDbType = SqlDbType.NVarChar,
+                        Direction = ParameterDirection.Input
+                    };
+                    command.Parameters.Add(parameter);
+
+                    connection.openConnection();
+                    SqlDataReader reader = command.ExecuteReader();
+                    table.Load(reader);
+                    reader.Close();
+                }
+                catch(Exception ex)
+                {
+
+                }
+                finally
+                {
+                    connection.closeConnection();
+                }
+            }
+            return table;
         }
 
         public static DataTable GetSpecificInformation(string connectionString, string IMEI, string storedProcedure)

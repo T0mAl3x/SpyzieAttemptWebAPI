@@ -104,12 +104,12 @@ namespace SilentWeb.Services
             return null;
         }
 
-        private static string MakeUrlSafe(string value)
+        public static string MakeUrlSafe(string value)
         {
             return value.Replace('+', '-').Replace('/', '_');
         }
 
-        private static string MakeUrlUnsafe(string value)
+        public static string MakeUrlUnsafe(string value)
         {
             string newValue = value.Replace('-', '+').Replace('_', '/');
             return newValue;

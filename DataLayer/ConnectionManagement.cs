@@ -27,19 +27,11 @@ namespace DataLayer
         public void openConnection()
         {
             Connection.Open();
-            if (Connection.State == System.Data.ConnectionState.Broken || Connection.State == System.Data.ConnectionState.Closed)
-            {
-                throw new Exception("Connection could not be opened");
-            }
         }
 
         public void closeConnection()
         {
             Connection.Close();
-            if (Connection.State != System.Data.ConnectionState.Closed)
-            {
-                throw new Exception("Connection could not be closed");
-            }
         }
 
         public SqlConnection GetConnection()

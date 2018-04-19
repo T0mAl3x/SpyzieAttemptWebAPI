@@ -15,6 +15,8 @@
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/Pictures/logo.ico" rel="shortcut icon" type="image/x-icon" />
     <link href="~/MyCss/navbar.css" rel="stylesheet" type="text/css" >
+    <link href="~/MyCss/chat.css" rel="stylesheet" type="text/css" >
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJhhhV3E0Gnv64iIuTh_j90GAVgPE5ZpE"></script>
 
 </head>
 <body>
@@ -81,13 +83,13 @@
         <div id="mySidenav" class="sidenav">
           <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
           <a href="~/ToolPages/Smartphones" runat="server">Smartphones</a>
-          <a href="#" runat="server">Applications</a>
-          <a href="#" runat="server">Call history</a>
-          <a href="#" runat="server">Contacts</a>
+          <a href="~/ToolPages/Applications" runat="server">Applications</a>
+          <a href="~/ToolPages/CallHistory" runat="server">Call history</a>
+          <a href="~/ToolPages/Contacts" runat="server">Contacts</a>
           <a href="~/ToolPages/LocationHistory" runat="server">Location history</a>
-          <a href="#" runat="server">Messages</a>
+          <a href="~/ToolPages/Messages" runat="server">Messages</a>
           <a href="~/ToolPages/Metadata" runat="server">Metadata</a>
-          <a href="#" runat="server">Photos</a>
+          <a href="~/ToolPages/Photos" runat="server">Photos</a>
           <a href="~/ToolPages/Trafic" runat="server">Trafic</a>
         </div>
         <div class="container body-content">

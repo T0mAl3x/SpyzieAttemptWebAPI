@@ -175,9 +175,11 @@
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="LogIn.aspx" />
+    <Content Include="MyCss\chat.css" />
     <Content Include="MyCss\navbar.css" />
     <Content Include="MyScripts\navbar.js" />
     <Content Include="Pictures\logo.ico" />
+    <Content Include="Pictures\user.png" />
     <Content Include="Register.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -214,8 +216,13 @@
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Site.Master" />
     <Content Include="Smartphones.aspx" />
+    <Content Include="ToolPages\Applications.aspx" />
+    <Content Include="ToolPages\CallHistory.aspx" />
+    <Content Include="ToolPages\Contacts.aspx" />
     <Content Include="ToolPages\LocationHistory.aspx" />
+    <Content Include="ToolPages\Messages.aspx" />
     <Content Include="ToolPages\Metadata.aspx" />
+    <Content Include="ToolPages\Photos.aspx" />
     <Content Include="ToolPages\Smartphones.aspx" />
     <Content Include="ToolPages\Trafic.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -297,6 +304,27 @@
     <Compile Include="Smartphones.aspx.designer.cs">
       <DependentUpon>Smartphones.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ToolPages\Applications.aspx.cs">
+      <DependentUpon>Applications.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Applications.aspx.designer.cs">
+      <DependentUpon>Applications.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\CallHistory.aspx.cs">
+      <DependentUpon>CallHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\CallHistory.aspx.designer.cs">
+      <DependentUpon>CallHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\Contacts.aspx.cs">
+      <DependentUpon>Contacts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Contacts.aspx.designer.cs">
+      <DependentUpon>Contacts.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ToolPages\LocationHistory.aspx.cs">
       <DependentUpon>LocationHistory.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -304,12 +332,26 @@
     <Compile Include="ToolPages\LocationHistory.aspx.designer.cs">
       <DependentUpon>LocationHistory.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ToolPages\Messages.aspx.cs">
+      <DependentUpon>Messages.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Messages.aspx.designer.cs">
+      <DependentUpon>Messages.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ToolPages\Metadata.aspx.cs">
       <DependentUpon>Metadata.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ToolPages\Metadata.aspx.designer.cs">
       <DependentUpon>Metadata.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\Photos.aspx.cs">
+      <DependentUpon>Photos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Photos.aspx.designer.cs">
+      <DependentUpon>Photos.aspx</DependentUpon>
     </Compile>
     <Compile Include="ToolPages\Smartphones.aspx.cs">
       <DependentUpon>Smartphones.aspx</DependentUpon>
