@@ -80,7 +80,7 @@ namespace DataLayer
                 }
                 catch (SqlException ex)
                 {
-
+                    secToken = null;
                 }
                 finally
                 {
@@ -93,7 +93,14 @@ namespace DataLayer
                 }
                 else
                 {
-                    return secToken;
+                    if (secToken != null)
+                    {
+                        return secToken;
+                    }
+                    else
+                    {
+                        return "fail";
+                    }
                 }
             }
         }

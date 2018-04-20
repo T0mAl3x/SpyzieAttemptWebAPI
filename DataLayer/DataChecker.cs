@@ -7,6 +7,30 @@ namespace DataLayer
 {
     public class DataChecker
     {
+        public static bool CheckPhoneRegistration(PhoneRegistrationModel model)
+        {
+            if (model == null)
+            {
+                return false;
+            }
+            if (model.IMEI != null && model.Manufacturer != null && model.Model != null && model.Username != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool CheckUserCredentials(UserAuthenticationModel model)
+        {
+            if (model == null)
+            {
+                return false;
+            }
+            if (model.Password != null && model.Username != null)
+            {
+                return true;
+            }
+            return false;
+        }
         public static bool CheckLocation(LocationModel location)
         {
             if (location == null)

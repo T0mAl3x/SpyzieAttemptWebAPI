@@ -13,9 +13,38 @@ namespace SilentWeb.Controllers
         [HttpPost]
         public string RegisterPhone([FromBody] PhoneRegistrationModel value)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
-            return Base64Helper.Encode(SqlHelper.RegisterPhone(connectionString, Base64Helper.Decode(value.IMEI), Base64Helper.Decode(value.Manufacturer),
-            Base64Helper.Decode(value.Model), Base64Helper.Decode(value.Username)));
+            if (DataChecker.CheckPhoneRegistration(value))
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
+                return Base64Helper.Encode(SqlHelper.RegisterPhone(connectionString, Base64Helper.Decode(value.IMEI), Base64Helper.Decode(value.Manufacturer),
+                Base64Helper.Decode(value.Model), Base64Helper.Decode(value.Username)));
+            }
+            else
+            {
+                return Base64Helper.Encode("fail");
+            }
+        }
+
+        [HttpPost]
+        public string AuthentificateUserFromPhone([FromBody] UserAuthenticationModel value)
+        {
+            if (DataChecker.CheckUserCredentials(value))
+            {
+                string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
+                if (SqlHelper.LogInUser(connectionString, Base64Helper.Decode(value.Username), Base64Helper.Decode(value.Password)))
+                {
+                    return Base64Helper.Encode("success");
+                }
+                else
+                {
+                    return Base64Helper.Encode("fail");
+                }
+            }
+            else
+            {
+                return Base64Helper.Encode("fail");
+            }
+            
         }
 
         [HttpPost]
@@ -48,8 +77,12 @@ namespace SilentWeb.Controllers
             }
             else
             {
-                var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "Authentication failed" };
-                throw new HttpResponseException(msg);
+                if (sqlResponse.Equals("Authentication failed"))
+                {
+                    //var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "Authentication failed" };
+                    //throw new HttpResponseException(msg);
+                }
+                return Ok();
             }
         }
     }
