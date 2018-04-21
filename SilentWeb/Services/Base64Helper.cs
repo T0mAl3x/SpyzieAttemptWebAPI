@@ -95,8 +95,8 @@ namespace SilentWeb.Services
 
                 if (DataChecker.CheckMetadata(bulkData.Metadata))
                 {
-                    for(int i = 0; i<bulkData.Metadata.Count; i++) {
-                        bulkData.Metadata[i] = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Metadata[i])));
+                    for(int i = 0; i<bulkData.Metadata.Metadata.Count; i++) {
+                        bulkData.Metadata.Metadata[i] = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Metadata.Metadata[i])));
                     }
                 }
                 return bulkData;

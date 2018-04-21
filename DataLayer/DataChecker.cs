@@ -151,13 +151,17 @@ namespace DataLayer
             return false;
         }
 
-        public static bool CheckMetadata(List<string> metadata)
+        public static bool CheckMetadata(MetadataModel metadata)
         {
-            if (metadata == null || metadata.Count == 0)
+            if (metadata == null)
             {
                 return false;
             }
-            return true;
+            if (metadata.Metadata != null && metadata.Hash != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SilentWeb.ToolPages
 
                 Response.Write("<div class='container text-center'>");
                 string userMask = SqlHelper.GetUserMask(connectionString);
-                if (userMask != "")
+                if (userMask != "" && userMask != null)
                 {
                     Response.Write("<button type='button' class='btn btn - info btn - lg' data-toggle='modal' data-target='#myModal'>Set mask</button>");
                     Response.Write("<table class='table table-stripped table-responsive>'");

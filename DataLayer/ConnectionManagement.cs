@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System;
+using System.Data;
 
 namespace DataLayer
 {
@@ -26,12 +27,18 @@ namespace DataLayer
 
         public void openConnection()
         {
-            Connection.Open();
+            if (Connection != null && Connection.State != ConnectionState.Open)
+            {
+                Connection.Open();
+            }
         }
 
         public void closeConnection()
         {
-            Connection.Close();
+            if (Connection != null && Connection.State != ConnectionState.Closed)
+            {
+                Connection.Close();
+            }
         }
 
         public SqlConnection GetConnection()

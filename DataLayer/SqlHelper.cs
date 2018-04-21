@@ -12,79 +12,82 @@ namespace DataLayer
     {
         public static string RegisterPhone(string connectionString, string IMEI, string manufacturer, string model, string username)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
-            using (SqlCommand command = new SqlCommand("PhoneRegistration", connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand("PhoneRegistration"))
             {
                 bool response = true;
                 string secToken = TokenGenerator.RandomString();
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@IMEI",
-                        Value = IMEI,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@IMEI",
+                            Value = IMEI,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter()
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Manufacturer",
+                            Value = manufacturer,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Model",
+                            Value = model,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        //Generating security token
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@SecToken",
+                            Value = secToken,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Username",
+                            Value = username,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Response",
+                            SqlDbType = SqlDbType.Bit,
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(parameter);
+                        command.ExecuteNonQuery();
+
+                        response = (bool)command.Parameters["@Response"].Value;
+                    }
+                    catch (SqlException ex)
                     {
-                        ParameterName = "@Manufacturer",
-                        Value = manufacturer,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter()
+                        secToken = null;
+                    }
+                    finally
                     {
-                        ParameterName = "@Model",
-                        Value = model,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    //Generating security token
-                    parameter = new SqlParameter()
-                    {
-                        ParameterName = "@SecToken",
-                        Value = secToken,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter()
-                    {
-                        ParameterName = "@Username",
-                        Value = username,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter()
-                    {
-                        ParameterName = "@Response",
-                        SqlDbType = SqlDbType.Bit,
-                        Direction = ParameterDirection.Output
-                    };
-                    command.Parameters.Add(parameter);
-                    connection.openConnection();
-                    command.ExecuteNonQuery();
-
-                    response = (bool)command.Parameters["@Response"].Value;
-                }
-                catch (SqlException ex)
-                {
-                    secToken = null;
-                }
-                finally
-                {
-                    connection.closeConnection();
+                        connection.Close();
+                    }
                 }
 
                 if (response)
@@ -109,52 +112,51 @@ namespace DataLayer
         {
             if (DataChecker.CheckAuthentication(credentials))
             {
-                ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
                 bool response = false;
-                using (SqlCommand command = new SqlCommand("AuthenticatePhone", connection.GetConnection()))
+                using (SqlCommand command = new SqlCommand("AuthenticatePhone"))
                 {
-
-                    try
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        SqlParameter parameter = new SqlParameter()
+                        try
                         {
-                            ParameterName = "@IMEI",
-                            Value = credentials.IMEI,
-                            SqlDbType = SqlDbType.NVarChar,
-                            Direction = ParameterDirection.Input
-                        };
-                        command.Parameters.Add(parameter);
+                            connection.Open();
+                            command.Connection = connection;
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = credentials.IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@SecToken",
+                                Value = credentials.SecToken,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Status",
+                                SqlDbType = SqlDbType.Bit,
+                                Direction = ParameterDirection.Output
+                            };
+                            command.Parameters.Add(parameter);
 
-                        parameter = new SqlParameter()
+                            command.ExecuteNonQuery();
+                            response = (bool)command.Parameters["@Status"].Value;
+                        }
+                        catch (Exception ex)
                         {
-                            ParameterName = "@SecToken",
-                            Value = credentials.SecToken,
-                            SqlDbType = SqlDbType.NVarChar,
-                            Direction = ParameterDirection.Input
-                        };
-                        command.Parameters.Add(parameter);
 
-                        parameter = new SqlParameter()
+                        }
+                        finally
                         {
-                            ParameterName = "@Status",
-                            SqlDbType = SqlDbType.Bit,
-                            Direction = ParameterDirection.Output
-                        };
-                        command.Parameters.Add(parameter);
-
-                        connection.openConnection();
-                        command.ExecuteNonQuery();
-
-                        response = (bool)command.Parameters["@Status"].Value;
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    finally
-                    {
-                        connection.closeConnection();
+                            connection.Close();
+                        }
                     }
                 }
                 return response;
@@ -167,53 +169,56 @@ namespace DataLayer
 
         public static string GetMask(string connectionString, string IMEI, string secToken)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
-
             if (AuthenticatePhone(connectionString, new PhoneAuthenticationModel() { IMEI = IMEI, SecToken = secToken }))
             {
                 DataTable table = new DataTable();
-                using (SqlCommand command = new SqlCommand("GetMask", connection.GetConnection()))
+                using (SqlCommand command = new SqlCommand("GetMask"))
                 {
-                    string response = "";
-                    try
+                    using (SqlConnection connection = new SqlConnection(connectionString))
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        SqlParameter parameter = new SqlParameter()
+                        string response = "";
+                        try
                         {
-                            ParameterName = "@IMEI",
-                            Value = IMEI,
-                            SqlDbType = SqlDbType.NVarChar,
-                            Direction = ParameterDirection.Input
-                        };
-                        command.Parameters.Add(parameter);
+                            connection.Open();
+                            command.Connection = connection;
+                            command.CommandType = CommandType.StoredProcedure;
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@IMEI",
+                                Value = IMEI,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
+                            };
+                            command.Parameters.Add(parameter);
+                            
+                            SqlDataReader reader = command.ExecuteReader();
+                            table.Load(reader);
+                            reader.Close();
 
-                        connection.openConnection();
-                        SqlDataReader reader = command.ExecuteReader();
-                        table.Load(reader);
-                        reader.Close();
-                    }
-                    catch (Exception ex)
-                    {
+                            DataRow row = table.Rows[0];
+                            foreach (DataColumn column in table.Columns)
+                            {
+                                if (column.ColumnName == "Mask")
+                                {
+                                    response += row[column.ColumnName].ToString() + ";";
+                                }
+                                else
+                                {
+                                    response += row[column.ColumnName].ToString() + ":";
+                                }
+                            }
+                            response.Remove(response.Length - 1);
+                        }
+                        catch (Exception ex)
+                        {
 
-                    }
-                    finally
-                    {
-                        connection.closeConnection();
-                    }
-                    DataRow row = table.Rows[0];
-                    foreach (DataColumn column in table.Columns)
-                    {
-                        if (column.ColumnName == "Mask")
-                        {
-                            response += row[column.ColumnName].ToString() + ";";
                         }
-                        else
+                        finally
                         {
-                            response += row[column.ColumnName].ToString() + ":";
+                            connection.Close();
                         }
+                        return response;
                     }
-                    response.Remove(response.Length - 1);
-                    return response;
                 }
             }
             else
@@ -225,113 +230,118 @@ namespace DataLayer
 
         public static string GetUserMask(string connectionString)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
             string mask = "";
-            using (SqlCommand command = new SqlCommand("GetUserMask", connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand("GetUserMask"))
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@UserMask",
-                        Size = 8,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Output
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@UserMask",
+                            Size = 8,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(parameter);
+                        
+                        command.ExecuteNonQuery();
+                        mask = (string)command.Parameters["@UserMask"].Value;
+                    }
+                    catch (Exception ex)
+                    {
 
-                    connection.openConnection();
-                    command.ExecuteNonQuery();
-
-                    mask = (string)command.Parameters["@UserMask"].Value;
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
                 }
-                catch (Exception ex)
-                {
-
-                }
-                finally
-                {
-                    connection.closeConnection();
-                }
-
                 return mask;
             }
         }
 
         public static void SetUserMask(string connectionString, StringBuilder userMask)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
             DataTable table = new DataTable();
-
-            using (SqlCommand command = new SqlCommand("SetUserMask", connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand("SetUserMask"))
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@UserMask",
-                        Value = userMask.ToString(),
-                        SqlDbType = SqlDbType.Char,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@UserMask",
+                            Value = userMask.ToString(),
+                            SqlDbType = SqlDbType.Char,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
 
-                    connection.openConnection();
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
 
-                }
-                finally
-                {
-                    connection.closeConnection();
-                }
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }    
             }
         }
 
         public static DataTable GetConversation(string connectionString, string IMEI, string number)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
             DataTable table = new DataTable();
-
-            using (SqlCommand command = new SqlCommand("GetConversation", connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand("GetConversation"))
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@IMEI",
-                        Value = IMEI,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@IMEI",
+                            Value = IMEI,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter()
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Number",
+                            Value = number,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        SqlDataReader reader = command.ExecuteReader();
+                        table.Load(reader);
+                        reader.Close();
+                    }
+                    catch (Exception ex)
                     {
-                        ParameterName = "@Number",
-                        Value = number,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
 
-                    connection.openConnection();
-                    SqlDataReader reader = command.ExecuteReader();
-                    table.Load(reader);
-                    reader.Close();
-                }
-                catch(Exception ex)
-                {
-
-                }
-                finally
-                {
-                    connection.closeConnection();
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
                 }
             }
             return table;
@@ -339,34 +349,37 @@ namespace DataLayer
 
         public static DataTable GetSpecificInformation(string connectionString, string IMEI, string storedProcedure)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
             DataTable table = new DataTable();
-            using (SqlCommand command = new SqlCommand(storedProcedure, connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand(storedProcedure))
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@IMEI",
-                        Value = IMEI,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@IMEI",
+                            Value = IMEI,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+                        
+                        SqlDataReader reader = command.ExecuteReader();
+                        table.Load(reader);
+                        reader.Close();
+                    }
+                    catch (Exception ex)
+                    {
 
-                    connection.openConnection();
-                    SqlDataReader reader = command.ExecuteReader();
-                    table.Load(reader);
-                    reader.Close();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                finally
-                {
-                    connection.closeConnection();
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
                 }
             }
             return table;
@@ -374,34 +387,37 @@ namespace DataLayer
 
         public static DataTable GetSmartphones(string connectionString, string username)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
             DataTable table = new DataTable();
-            using (SqlCommand command = new SqlCommand("GetSmartphones", connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand("GetSmartphones"))
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@Username",
-                        Value = username,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Username",
+                            Value = username,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+                        
+                        SqlDataReader reader = command.ExecuteReader();
+                        table.Load(reader);
+                        reader.Close();
+                    }
+                    catch (Exception ex)
+                    {
 
-                    connection.openConnection();
-                    SqlDataReader reader = command.ExecuteReader();
-                    table.Load(reader);
-                    reader.Close();
-                }
-                catch(Exception ex)
-                {
-
-                }
-                finally
-                {
-                    connection.closeConnection();
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
                 }
             }
             return table;
@@ -409,550 +425,593 @@ namespace DataLayer
 
         public static string GatherData(string connectionString, BulkDataModel bulkData)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
 
             if (AuthenticatePhone(connectionString, bulkData.Authentication))
             {
                 if (DataChecker.CheckLocation(bulkData.Location))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertLocation", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertLocation"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            parameter = new SqlParameter()
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Latitude",
+                                    Value = Double.Parse(bulkData.Location.Latitude),
+                                    SqlDbType = SqlDbType.Float,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Longitude",
+                                    Value = Double.Parse(bulkData.Location.Longitude),
+                                    SqlDbType = SqlDbType.Float,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@DateTime",
+                                    Value = DateTime.Now.ToString("yyyy-MM-ddTHH':'mm':'sszzz"),
+                                    SqlDbType = SqlDbType.DateTime,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Location.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+                                
+                                command.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
                             {
-                                ParameterName = "@Latitude",
-                                Value = Double.Parse(bulkData.Location.Latitude),
-                                SqlDbType = SqlDbType.Float,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
 
-                            parameter = new SqlParameter()
+                            }
+                            finally
                             {
-                                ParameterName = "@Longitude",
-                                Value = Double.Parse(bulkData.Location.Longitude),
-                                SqlDbType = SqlDbType.Float,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@DateTime",
-                                Value = DateTime.Now.ToString("yyyy-MM-ddTHH':'mm':'sszzz"),
-                                SqlDbType = SqlDbType.DateTime,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Hash",
-                                Value = bulkData.Location.Hash,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
+                                connection.Close() ;
+                            }
                         }
                     }
                 }
                 if (DataChecker.CheckCalls(bulkData.CallHistory))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertCallHistory", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertCallHistory"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            DataTable table = new DataTable();
-                            for (int i = 0; i < 4; i++)
-                            {
-                                table.Columns.Add();
+                                DataTable table = new DataTable();
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    table.Columns.Add();
+                                }
+
+                                for (int i = 0; i < bulkData.CallHistory.Calls.Count; i++)
+                                {
+                                    DataRow row = table.NewRow();
+
+                                    row[0] = bulkData.CallHistory.Calls[i].Number;
+                                    row[1] = bulkData.CallHistory.Calls[i].Date;
+                                    row[2] = bulkData.CallHistory.Calls[i].Direction;
+                                    row[3] = bulkData.CallHistory.Calls[i].Duration;
+
+                                    table.Rows.Add(row);
+                                }
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Calls",
+                                    Value = table,
+                                    SqlDbType = SqlDbType.Structured,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.CallHistory.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+                                
+                                command.ExecuteNonQuery();
                             }
-
-                            for (int i = 0; i < bulkData.CallHistory.Calls.Count; i++)
+                            catch (Exception ex)
                             {
-                                DataRow row = table.NewRow();
 
-                                row[0] = bulkData.CallHistory.Calls[i].Number;
-                                row[1] = bulkData.CallHistory.Calls[i].Date;
-                                row[2] = bulkData.CallHistory.Calls[i].Direction;
-                                row[3] = bulkData.CallHistory.Calls[i].Duration;
-
-                                table.Rows.Add(row);
                             }
-                            parameter = new SqlParameter()
+                            finally
                             {
-                                ParameterName = "@Calls",
-                                Value = table,
-                                SqlDbType = SqlDbType.Structured,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Hash",
-                                Value = bulkData.CallHistory.Hash,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
+                                connection.Close();
+                            }
                         }
                     }
                 }
                 if (DataChecker.CheckContacts(bulkData.Contacts))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertContacts", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertContacts"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            DataTable table = new DataTable();
-                            for (int i = 0; i < 3; i++)
-                            {
-                                table.Columns.Add();
+                                DataTable table = new DataTable();
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    table.Columns.Add();
+                                }
+
+                                for (int i = 0; i < bulkData.Contacts.ContactList.Count; i++)
+                                {
+                                    DataRow row = table.NewRow();
+
+                                    row[0] = bulkData.Contacts.ContactList[i].Name;
+                                    row[1] = bulkData.Contacts.ContactList[i].Number;
+                                    row[2] = bulkData.Contacts.ContactList[i].Picture;
+
+                                    table.Rows.Add(row);
+                                }
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Contacts",
+                                    Value = table,
+                                    SqlDbType = SqlDbType.Structured,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Contacts.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+                                
+                                command.ExecuteNonQuery();
                             }
-
-                            for (int i = 0; i < bulkData.Contacts.ContactList.Count; i++)
+                            catch (Exception ex)
                             {
-                                DataRow row = table.NewRow();
 
-                                row[0] = bulkData.Contacts.ContactList[i].Name;
-                                row[1] = bulkData.Contacts.ContactList[i].Number;
-                                row[2] = bulkData.Contacts.ContactList[i].Picture;
-
-                                table.Rows.Add(row);
                             }
-                            parameter = new SqlParameter()
+                            finally
                             {
-                                ParameterName = "@Contacts",
-                                Value = table,
-                                SqlDbType = SqlDbType.Structured,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Hash",
-                                Value = bulkData.Contacts.Hash,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
+                                connection.Close();
+                            }
                         }
                     }
                 }
 
                 if (DataChecker.CheckMessages(bulkData.Messages))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertMessages", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertMessages"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            DataTable table = new DataTable();
-                            for (int i = 0; i < 5; i++)
-                            {
-                                table.Columns.Add();
+                                DataTable table = new DataTable();
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    table.Columns.Add();
+                                }
+
+                                for (int i = 0; i < bulkData.Messages.Messages.Count; i++)
+                                {
+                                    DataRow row = table.NewRow();
+
+                                    row[0] = bulkData.Messages.Messages[i].Address;
+                                    row[1] = bulkData.Messages.Messages[i].Body;
+                                    row[2] = bulkData.Messages.Messages[i].State;
+                                    row[3] = bulkData.Messages.Messages[i].Date;
+                                    row[4] = bulkData.Messages.Messages[i].Type;
+
+                                    table.Rows.Add(row);
+                                }
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Messages",
+                                    Value = table,
+                                    SqlDbType = SqlDbType.Structured,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Messages.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                command.ExecuteNonQuery();
                             }
-
-                            for (int i = 0; i < bulkData.Messages.Messages.Count; i++)
+                            catch (Exception ex)
                             {
-                                DataRow row = table.NewRow();
 
-                                row[0] = bulkData.Messages.Messages[i].Address;
-                                row[1] = bulkData.Messages.Messages[i].Body;
-                                row[2] = bulkData.Messages.Messages[i].State;
-                                row[3] = bulkData.Messages.Messages[i].Date;
-                                row[4] = bulkData.Messages.Messages[i].Type;
-
-                                table.Rows.Add(row);
                             }
-                            parameter = new SqlParameter()
+                            finally
                             {
-                                ParameterName = "@Messages",
-                                Value = table,
-                                SqlDbType = SqlDbType.Structured,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Hash",
-                                Value = bulkData.Messages.Hash,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
+                                connection.Close();
+                            }
                         }
                     }
                 }
 
                 if (DataChecker.CheckTrafic(bulkData.Trafic))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertTrafic", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertTrafic"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            parameter = new SqlParameter()
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Trafic",
+                                    Value = bulkData.Trafic.Trafic,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Date",
+                                    Value = DateTime.Now.ToString("yyyy-MM-ddTHH':'mm':'sszzz"),
+                                    SqlDbType = SqlDbType.DateTime,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Trafic.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+                                
+                                command.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
                             {
-                                ParameterName = "@Trafic",
-                                Value = bulkData.Trafic.Trafic,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
 
-                            parameter = new SqlParameter()
+                            }
+                            finally
                             {
-                                ParameterName = "@Date",
-                                Value = DateTime.Now.ToString("yyyy-MM-ddTHH':'mm':'sszzz"),
-                                SqlDbType = SqlDbType.DateTime,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Hash",
-                                Value = bulkData.Trafic.Hash,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
-                        }
+                                connection.Close();
+                            }
+                        } 
                     }
                 }
 
                 if (DataChecker.CheckApplications(bulkData.Applications))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertApplications", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertApplications"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            DataTable table = new DataTable();
-                            for (int i = 0; i < 2; i++)
-                            {
-                                table.Columns.Add();
+                                DataTable table = new DataTable();
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    table.Columns.Add();
+                                }
+
+                                for (int i = 0; i < bulkData.Applications.Applications.Count; i++)
+                                {
+                                    DataRow row = table.NewRow();
+
+                                    row[0] = bulkData.Applications.Applications[i].Name;
+                                    row[1] = bulkData.Applications.Applications[i].Icon;
+
+                                    table.Rows.Add(row);
+                                }
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Applications",
+                                    Value = table,
+                                    SqlDbType = SqlDbType.Structured,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Applications.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+                                
+                                command.ExecuteNonQuery();
                             }
-
-                            for (int i = 0; i < bulkData.Applications.Applications.Count; i++)
+                            catch (Exception ex)
                             {
-                                DataRow row = table.NewRow();
 
-                                row[0] = bulkData.Applications.Applications[i].Name;
-                                row[1] = bulkData.Applications.Applications[i].Icon;
-
-                                table.Rows.Add(row);
                             }
-                            parameter = new SqlParameter()
+                            finally
                             {
-                                ParameterName = "@Applications",
-                                Value = table,
-                                SqlDbType = SqlDbType.Structured,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Hash",
-                                Value = bulkData.Applications.Hash,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
+                                connection.Close();
+                            }
                         }
                     }
                 }
 
                 if (bulkData.BatteryLevel != 0)
                 {
-                    using (SqlCommand command = new SqlCommand("InsertBatteryLevel", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertBatteryLevel"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            parameter = new SqlParameter()
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Level",
+                                    Value = bulkData.BatteryLevel,
+                                    SqlDbType = SqlDbType.Float,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                connection.Open();
+                                command.ExecuteNonQuery();
+
+                            }
+                            catch (Exception ex)
                             {
-                                ParameterName = "@Level",
-                                Value = bulkData.BatteryLevel,
-                                SqlDbType = SqlDbType.Float,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
 
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
+                            }
+                            finally
+                            {
+                                connection.Close();
+                            }
                         }
                     }
                 }
 
                 if (DataChecker.CheckPhotos(bulkData.Photos))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertPhotos", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertPhotos"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            DataTable table = new DataTable();
-                            for (int i = 0; i < 4; i++)
-                            {
-                                table.Columns.Add();
+                                DataTable table = new DataTable();
+                                for (int i = 0; i < 4; i++)
+                                {
+                                    table.Columns.Add();
+                                }
+
+                                for (int i = 0; i < bulkData.Photos.Photos.Count; i++)
+                                {
+                                    DataRow row = table.NewRow();
+
+                                    row[0] = bulkData.Photos.Photos[i].Image;
+                                    row[1] = bulkData.Photos.Photos[i].Date;
+                                    row[2] = bulkData.Photos.Photos[i].Latitude;
+                                    row[3] = bulkData.Photos.Photos[i].Longitude;
+
+                                    table.Rows.Add(row);
+                                }
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Photos",
+                                    Value = table,
+                                    SqlDbType = SqlDbType.Structured,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Photos.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+                                
+                                command.ExecuteNonQuery();
                             }
-
-                            for (int i = 0; i < bulkData.Photos.Photos.Count; i++)
+                            catch (Exception ex)
                             {
-                                DataRow row = table.NewRow();
 
-                                row[0] = bulkData.Photos.Photos[i].Image;
-                                row[1] = bulkData.Photos.Photos[i].Date;
-                                row[2] = bulkData.Photos.Photos[i].Latitude;
-                                row[3] = bulkData.Photos.Photos[i].Longitude;
-
-                                table.Rows.Add(row);
                             }
-                            parameter = new SqlParameter()
+                            finally
                             {
-                                ParameterName = "@Photos",
-                                Value = table,
-                                SqlDbType = SqlDbType.Structured,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Hash",
-                                Value = bulkData.Photos.Hash,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
-                        }
+                                connection.Close();
+                            }
+                        }   
                     }
                 }
 
                 if (DataChecker.CheckMetadata(bulkData.Metadata))
                 {
-                    using (SqlCommand command = new SqlCommand("InsertMetadata", connection.GetConnection()))
+                    using (SqlCommand command = new SqlCommand("InsertMetadata"))
                     {
-                        try
+                        using (SqlConnection connection = new SqlConnection(connectionString))
                         {
-                            command.CommandType = CommandType.StoredProcedure;
-                            SqlParameter parameter = new SqlParameter()
+                            try
                             {
-                                ParameterName = "@IMEI",
-                                Value = bulkData.Authentication.IMEI,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
 
-                            DataTable table = new DataTable();
-                            for (int i = 0; i < 3; i++)
-                            {
-                                table.Columns.Add();
+                                DataTable table = new DataTable();
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    table.Columns.Add();
+                                }
+
+                                for (int i = 0; i < bulkData.Metadata.Metadata.Count; i++)
+                                {
+                                    string[] metadata = bulkData.Metadata.Metadata[i].Split(';');
+
+                                    DataRow row = table.NewRow();
+
+                                    row[0] = metadata[0];
+                                    row[1] = metadata[1];
+                                    row[2] = metadata[2];
+
+                                    table.Rows.Add(row);
+                                }
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Metadata",
+                                    Value = table,
+                                    SqlDbType = SqlDbType.Structured,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Metadata.Hash,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+                                
+                                command.ExecuteNonQuery();
                             }
-
-                            for (int i = 0; i < bulkData.Metadata.Count; i++)
+                            catch (Exception ex)
                             {
-                                string[] metadata = bulkData.Metadata[i].Split(';');
 
-                                DataRow row = table.NewRow();
-
-                                row[0] = metadata[0];
-                                row[1] = metadata[1];
-                                row[2] = metadata[2];
-
-                                table.Rows.Add(row);
                             }
-                            parameter = new SqlParameter()
+                            finally
                             {
-                                ParameterName = "@Metadata",
-                                Value = table,
-                                SqlDbType = SqlDbType.Structured,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            connection.openConnection();
-                            command.ExecuteNonQuery();
-                        }
-                        catch(Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.closeConnection();
-                        }
+                                connection.Close();
+                            }
+                        }   
                     }
                 }
                 return "";
@@ -965,80 +1024,83 @@ namespace DataLayer
 
         public static string RegisterUser(string connectionString, string firstname, string lastname, string username, string password, string email)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
-
             bool sqlResponse = true;
-            using (SqlCommand command = new SqlCommand("InsertUser", connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand("InsertUser"))
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@Firstname",
-                        Value = firstname,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Firstname",
+                            Value = firstname,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter()
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Lastname",
+                            Value = lastname,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Username",
+                            Value = username,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Password",
+                            Value = password,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Email",
+                            Value = email,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Out",
+                            SqlDbType = SqlDbType.Bit,
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(parameter);
+                        
+                        command.ExecuteNonQuery();
+
+                        sqlResponse = (bool)command.Parameters["@Out"].Value;
+                    }
+                    catch (Exception ex)
                     {
-                        ParameterName = "@Lastname",
-                        Value = lastname,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter()
+                    }
+                    finally
                     {
-                        ParameterName = "@Username",
-                        Value = username,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter()
-                    {
-                        ParameterName = "@Password",
-                        Value = password,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter()
-                    {
-                        ParameterName = "@Email",
-                        Value = email,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
-
-                    parameter = new SqlParameter()
-                    {
-                        ParameterName = "@Out",
-                        SqlDbType = SqlDbType.Bit,
-                        Direction = ParameterDirection.Output
-                    };
-                    command.Parameters.Add(parameter);
-
-                    connection.openConnection();
-                    command.ExecuteNonQuery();
-
-                    sqlResponse = (bool) command.Parameters["@Out"].Value;
+                        connection.Close();
+                    }
                 }
-                catch(Exception ex)
-                {
-
-                }
-                finally
-                {
-                    connection.closeConnection();
-                }
+                    
             }
 
             if (sqlResponse)
@@ -1053,54 +1115,55 @@ namespace DataLayer
 
         public static bool LogInUser(string connectionString, string username, string password)
         {
-            ConnectionManagement connection = ConnectionManagement.getInstance(connectionString);
-
             bool sqlResponse = true;
-            using (SqlCommand command = new SqlCommand("LogInUser", connection.GetConnection()))
+            using (SqlCommand command = new SqlCommand("LogInUser"))
             {
-                try
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    SqlParameter parameter = new SqlParameter()
+                    try
                     {
-                        ParameterName = "@Username",
-                        Value = username,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Username",
+                            Value = username,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter()
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Password",
+                            Value = password,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Out",
+                            SqlDbType = SqlDbType.Bit,
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(parameter);
+                        
+                        command.ExecuteNonQuery();
+
+                        sqlResponse = (bool)command.Parameters["@Out"].Value;
+                    }
+                    catch (Exception ex)
                     {
-                        ParameterName = "@Password",
-                        Value = password,
-                        SqlDbType = SqlDbType.NVarChar,
-                        Direction = ParameterDirection.Input
-                    };
-                    command.Parameters.Add(parameter);
 
-                    parameter = new SqlParameter()
+                    }
+                    finally
                     {
-                        ParameterName = "@Out",
-                        SqlDbType = SqlDbType.Bit,
-                        Direction = ParameterDirection.Output
-                    };
-                    command.Parameters.Add(parameter);
-
-                    connection.openConnection();
-                    command.ExecuteNonQuery();
-
-                    sqlResponse = (bool)command.Parameters["@Out"].Value;
+                        connection.Close();
+                    }
                 }
-                catch(Exception ex)
-                {
-
-                }
-                finally
-                {
-                    connection.closeConnection();
-                }
-
                 return sqlResponse;
             }
         }
