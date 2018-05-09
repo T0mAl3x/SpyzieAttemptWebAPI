@@ -178,6 +178,7 @@
     <Content Include="MyCss\chat.css" />
     <Content Include="MyCss\navbar.css" />
     <Content Include="MyScripts\navbar.js" />
+    <Content Include="Pictures\load.gif" />
     <Content Include="Pictures\logo.ico" />
     <Content Include="Pictures\user.png" />
     <Content Include="Register.aspx" />
@@ -219,6 +220,7 @@
     <Content Include="ToolPages\Applications.aspx" />
     <Content Include="ToolPages\CallHistory.aspx" />
     <Content Include="ToolPages\Contacts.aspx" />
+    <Content Include="ToolPages\Dashboard.aspx" />
     <Content Include="ToolPages\LocationHistory.aspx" />
     <Content Include="ToolPages\Messages.aspx" />
     <Content Include="ToolPages\Metadata.aspx" />
@@ -324,6 +326,13 @@
     </Compile>
     <Compile Include="ToolPages\Contacts.aspx.designer.cs">
       <DependentUpon>Contacts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\Dashboard.aspx.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Dashboard.aspx.designer.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="ToolPages\LocationHistory.aspx.cs">
       <DependentUpon>LocationHistory.aspx</DependentUpon>

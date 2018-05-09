@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
 using DataLayer.Models;
-using System.Text.RegularExpressions;
 using System.Text;
 
 namespace DataLayer
@@ -859,8 +857,7 @@ namespace DataLayer
                                     Direction = ParameterDirection.Input
                                 };
                                 command.Parameters.Add(parameter);
-
-                                connection.Open();
+                                
                                 command.ExecuteNonQuery();
 
                             }
@@ -1166,6 +1163,47 @@ namespace DataLayer
                 }
                 return sqlResponse;
             }
+        }
+
+        public static string GetKeys(string connectionString, string IMEI, string secToken)
+        {
+            string keys = "";
+            if (AuthenticatePhone(connectionString, new PhoneAuthenticationModel() { IMEI = IMEI, SecToken = secToken } ))
+            {
+                using (SqlCommand command = new SqlCommand("GetAuthentification"))
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        try
+                        {
+                            connection.Open();
+                            command.Connection = connection;
+                            command.CommandType = CommandType.StoredProcedure;
+
+                            SqlParameter parameter = new SqlParameter()
+                            {
+                                ParameterName = "@Keys",
+                                Size = 32,
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Output
+                            };
+                            command.Parameters.Add(parameter);
+
+                            command.ExecuteNonQuery();
+                            keys = (string)command.Parameters["@Keys"].Value;
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        finally
+                        {
+                            connection.Close();
+                        }
+                    }
+                }
+            }
+            return keys;
         }
     }
 }

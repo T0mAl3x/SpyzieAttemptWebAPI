@@ -33,7 +33,7 @@ namespace SilentWeb.ToolPages
                 else
                 {
                     Response.Write("<table class='table table-hover table-responsive'>");
-                    Response.Write("<thead><tr><th>Trafic (GB)</th><th>Date</th></tr></thead>");
+                    Response.Write("<thead><tr><th>Trafic (MB)</th><th>Date</th></tr></thead>");
                     Response.Write("<tbody>");
                     foreach (DataRow row in table.Rows)
                     {
