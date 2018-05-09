@@ -1165,10 +1165,57 @@ namespace DataLayer
             }
         }
 
-        public static string GetKeys(string connectionString, string IMEI, string secToken)
+        public static string GetKeys(string connectionString)
         {
             string keys = "";
-            if (AuthenticatePhone(connectionString, new PhoneAuthenticationModel() { IMEI = IMEI, SecToken = secToken } ))
+            using (SqlCommand command = new SqlCommand("GetAuthentification"))
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        SqlParameter parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Keys",
+                            Size = 64,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@NewKey",
+                            Value = TokenGenerator.RandomString(),
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        command.ExecuteNonQuery();
+                        keys = (string)command.Parameters["@Keys"].Value;
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            return keys;
+        }
+
+        public static string GetKeysAuth(string connectionString, string IMEI, string secToken)
+        {
+            string keys = "";
+            if (AuthenticatePhone(connectionString, new PhoneAuthenticationModel() { IMEI = IMEI, SecToken = secToken }))
             {
                 using (SqlCommand command = new SqlCommand("GetAuthentification"))
                 {
@@ -1183,9 +1230,18 @@ namespace DataLayer
                             SqlParameter parameter = new SqlParameter()
                             {
                                 ParameterName = "@Keys",
-                                Size = 32,
+                                Size = 64,
                                 SqlDbType = SqlDbType.NVarChar,
                                 Direction = ParameterDirection.Output
+                            };
+                            command.Parameters.Add(parameter);
+
+                            parameter = new SqlParameter()
+                            {
+                                ParameterName = "@NewKey",
+                                Value = TokenGenerator.RandomString(),
+                                SqlDbType = SqlDbType.NVarChar,
+                                Direction = ParameterDirection.Input
                             };
                             command.Parameters.Add(parameter);
 
