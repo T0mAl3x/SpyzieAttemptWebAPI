@@ -38,7 +38,7 @@ namespace DataLayer
                 return false;
             }
 
-            if (location.Latitude != null && location.Longitude != null && location.Hash != null)
+            if (location.Locations != null && location.Locations.Count != 0)
             {
                 return true;
             }

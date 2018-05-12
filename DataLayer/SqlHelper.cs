@@ -446,37 +446,44 @@ namespace DataLayer
                                 };
                                 command.Parameters.Add(parameter);
 
+                                DataTable table = new DataTable();
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    table.Columns.Add();
+                                }
+
+                                for (int i = 0; i < bulkData.Location.Locations.Count; i++)
+                                {
+                                    DataRow row = table.NewRow();
+
+                                    row[0] = bulkData.Location.Locations[i].Latitude;
+                                    row[1] = bulkData.Location.Locations[i].Longitude;
+                                    row[2] = bulkData.Location.Locations[i].Date;
+
+                                    table.Rows.Add(row);
+                                }
                                 parameter = new SqlParameter()
                                 {
-                                    ParameterName = "@Latitude",
-                                    Value = Double.Parse(bulkData.Location.Latitude),
-                                    SqlDbType = SqlDbType.Float,
+                                    ParameterName = "@Locations",
+                                    Value = table,
+                                    SqlDbType = SqlDbType.Structured,
                                     Direction = ParameterDirection.Input
                                 };
                                 command.Parameters.Add(parameter);
 
-                                parameter = new SqlParameter()
+                                string hashValue;
+                                if (bulkData.Location.Hash != null)
                                 {
-                                    ParameterName = "@Longitude",
-                                    Value = Double.Parse(bulkData.Location.Longitude),
-                                    SqlDbType = SqlDbType.Float,
-                                    Direction = ParameterDirection.Input
-                                };
-                                command.Parameters.Add(parameter);
-
-                                parameter = new SqlParameter()
+                                    hashValue = bulkData.Location.Hash;
+                                }
+                                else
                                 {
-                                    ParameterName = "@DateTime",
-                                    Value = DateTime.Now.ToString("yyyy-MM-ddTHH':'mm':'sszzz"),
-                                    SqlDbType = SqlDbType.DateTime,
-                                    Direction = ParameterDirection.Input
-                                };
-                                command.Parameters.Add(parameter);
-
+                                    hashValue = "DB";
+                                }
                                 parameter = new SqlParameter()
                                 {
                                     ParameterName = "@Hash",
-                                    Value = bulkData.Location.Hash,
+                                    Value = hashValue,
                                     SqlDbType = SqlDbType.NVarChar,
                                     Direction = ParameterDirection.Input
                                 };
@@ -1163,103 +1170,6 @@ namespace DataLayer
                 }
                 return sqlResponse;
             }
-        }
-
-        public static string GetKeys(string connectionString)
-        {
-            string keys = "";
-            using (SqlCommand command = new SqlCommand("GetAuthentification"))
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    try
-                    {
-                        connection.Open();
-                        command.Connection = connection;
-                        command.CommandType = CommandType.StoredProcedure;
-
-                        SqlParameter parameter = new SqlParameter()
-                        {
-                            ParameterName = "@Keys",
-                            Size = 64,
-                            SqlDbType = SqlDbType.NVarChar,
-                            Direction = ParameterDirection.Output
-                        };
-                        command.Parameters.Add(parameter);
-
-                        parameter = new SqlParameter()
-                        {
-                            ParameterName = "@NewKey",
-                            Value = TokenGenerator.RandomString(),
-                            SqlDbType = SqlDbType.NVarChar,
-                            Direction = ParameterDirection.Input
-                        };
-                        command.Parameters.Add(parameter);
-
-                        command.ExecuteNonQuery();
-                        keys = (string)command.Parameters["@Keys"].Value;
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    finally
-                    {
-                        connection.Close();
-                    }
-                }
-            }
-            return keys;
-        }
-
-        public static string GetKeysAuth(string connectionString, string IMEI, string secToken)
-        {
-            string keys = "";
-            if (AuthenticatePhone(connectionString, new PhoneAuthenticationModel() { IMEI = IMEI, SecToken = secToken }))
-            {
-                using (SqlCommand command = new SqlCommand("GetAuthentification"))
-                {
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        try
-                        {
-                            connection.Open();
-                            command.Connection = connection;
-                            command.CommandType = CommandType.StoredProcedure;
-
-                            SqlParameter parameter = new SqlParameter()
-                            {
-                                ParameterName = "@Keys",
-                                Size = 64,
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Output
-                            };
-                            command.Parameters.Add(parameter);
-
-                            parameter = new SqlParameter()
-                            {
-                                ParameterName = "@NewKey",
-                                Value = TokenGenerator.RandomString(),
-                                SqlDbType = SqlDbType.NVarChar,
-                                Direction = ParameterDirection.Input
-                            };
-                            command.Parameters.Add(parameter);
-
-                            command.ExecuteNonQuery();
-                            keys = (string)command.Parameters["@Keys"].Value;
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        finally
-                        {
-                            connection.Close();
-                        }
-                    }
-                }
-            }
-            return keys;
         }
     }
 }

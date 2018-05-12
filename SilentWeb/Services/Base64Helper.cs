@@ -32,9 +32,16 @@ namespace SilentWeb.Services
 
                 if (DataChecker.CheckLocation(bulkData.Location))
                 {
-                    bulkData.Location.Latitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Latitude)));
-                    bulkData.Location.Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Longitude)));
-                    bulkData.Location.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Hash)));
+                    for (int i=0; i<bulkData.Location.Locations.Count; i++)
+                    {
+                        bulkData.Location.Locations[i].Latitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Locations[i].Latitude)));
+                        bulkData.Location.Locations[i].Longitude = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Locations[i].Longitude)));
+                        bulkData.Location.Locations[i].Date = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Locations[i].Date)));
+                    }
+                    if (bulkData.Location.Hash != null)
+                    {
+                        bulkData.Location.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlUnsafe(bulkData.Location.Hash)));
+                    }
                 }
 
                 if (DataChecker.CheckCalls(bulkData.CallHistory))

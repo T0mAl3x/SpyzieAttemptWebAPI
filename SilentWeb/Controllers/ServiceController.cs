@@ -17,7 +17,7 @@ namespace SilentWeb.Controllers
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
                 return Base64Helper.Encode(SqlHelper.RegisterPhone(connectionString, Base64Helper.Decode(value.IMEI), Base64Helper.Decode(value.Manufacturer),
-                Base64Helper.Decode(value.Model), Base64Helper.Decode(value.Username)) + ";" + SqlHelper.GetKeys(connectionString));
+                Base64Helper.Decode(value.Model), Base64Helper.Decode(value.Username)));
             }
             else
             {
@@ -52,13 +52,6 @@ namespace SilentWeb.Controllers
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
             return Base64Helper.Encode(SqlHelper.GetMask(connectionString, Base64Helper.Decode(credentials.IMEI), Base64Helper.Decode(credentials.SecToken)));
-        }
-
-        [HttpPost]
-        public string GetAuthentification([FromBody] PhoneAuthenticationModel credentials)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
-            return Base64Helper.Encode(SqlHelper.GetKeysAuth(connectionString, Base64Helper.Decode(credentials.IMEI), Base64Helper.Decode(credentials.SecToken)));
         }
 
         [HttpPost]
