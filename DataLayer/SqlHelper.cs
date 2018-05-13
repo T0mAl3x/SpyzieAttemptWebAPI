@@ -1119,7 +1119,7 @@ namespace DataLayer
 
         public static bool LogInUser(string connectionString, string username, string password)
         {
-            bool sqlResponse = true;
+            bool sqlResponse = false;
             using (SqlCommand command = new SqlCommand("LogInUser"))
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
