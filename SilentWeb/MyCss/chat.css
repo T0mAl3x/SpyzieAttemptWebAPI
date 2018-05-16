@@ -34,10 +34,8 @@
 }
 
 .vertical-menu {
-    width: 250px;
     height: 550px;
     overflow-y: auto;
-    float:left;
 }
 
     .vertical-menu a {

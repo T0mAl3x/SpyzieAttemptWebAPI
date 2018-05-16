@@ -3,6 +3,7 @@
 <%@ Import Namespace="DataLayer" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="jumbotron">
+        <h2>Last location</h2>
         <div id="map" style="width:100%;height:500px"></div>
     </div>
     <%
@@ -36,6 +37,8 @@
     %>
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#loadingImage').hide();
+            $('#content').show();
         <%
         if (ok != false)
         {

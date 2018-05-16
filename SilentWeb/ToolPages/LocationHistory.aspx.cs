@@ -15,7 +15,8 @@ namespace SilentWeb.ToolPages
         protected void Page_Load(object sender, EventArgs e)
         {
             HttpCookie cookie = Request.Cookies["Logged"];
-            Response.Write("<div class='container text-center'>");
+            Response.Write("<img id='loadingImage' width='100' height='100' style='position:absolute;margin-top:-100px;margin-left:-100px;top:50% !important;left:50% !important;' src='../Pictures/loading.gif'/>");
+            Response.Write("<div id='content' class='container text-center' style='display:none'>");
 
             if (cookie["select"] == null)
             {
@@ -32,12 +33,12 @@ namespace SilentWeb.ToolPages
                 }
                 else
                 {
-                    Response.Write("<table class='table table-hover table-responsive'>");
+                    Response.Write("<table id='locationTable' class='table table-hover table-responsive'>");
                     Response.Write("<thead><tr><th>Latitude</th><th>Longitude</th><th>Location Date</th></tr></thead>");
                     Response.Write("<tbody>");
                     foreach (DataRow row in table.Rows)
                     {
-                        Response.Write("<tr>");
+                        Response.Write("<tr data-toggle='modal' data-target='#myModal'>");
                         Response.Write("<td>" + row["Latitude"].ToString() + "</td>");
                         Response.Write("<td>" + row["Longitude"].ToString() + "</td>");
                         Response.Write("<td>" + row["LocationDate"].ToString() + "</td>");

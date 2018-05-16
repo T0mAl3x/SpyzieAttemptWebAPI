@@ -20,7 +20,7 @@
             <div class="checkbox"><asp:CheckBox ID="location" runat="server" />Location</div>
             <div class="checkbox"><asp:CheckBox ID="battery" runat="server" />Battery</div>
             <br />
-            <asp:Button runat="server" Text="Log in" CssClass="btn btn-success" OnClick="Submit" />
+            <asp:Button runat="server" Text="Submit" CssClass="btn btn-success" OnClick="Submit" />
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -28,5 +28,10 @@
       </div>
     </div>
   </div>
-    
+    <script type="text/javascript">
+        $(window).ready(function () {
+            $('#loadingImage').hide();
+            $('#content').show();
+        });
+    </script>
 </asp:Content>

@@ -16,7 +16,8 @@ namespace SilentWeb.ToolPages
         protected void Page_Load(object sender, EventArgs e)
         {
             HttpCookie cookie = Request.Cookies["Logged"];
-            Response.Write("<div class='container'>");
+            Response.Write("<img id='loadingImage' width='100' height='100' style='position:absolute;margin-top:-100px;margin-left:-100px;top:50% !important;left:50% !important;' src='../Pictures/loading.gif'/>");
+            Response.Write("<div id='content' class='container' style='display:none'>");
 
             if (cookie["select"] == null)
             {
@@ -125,10 +126,10 @@ namespace SilentWeb.ToolPages
                 if (table != null && table.Rows.Count != 0)
                 {
                     Response.Write("<h2>Last message</h2>");
-                    Response.Write("<p class='bg-info'>Contact name</p>");
-                    Response.Write("<p>" + table.Rows[0]["Name"].ToString() +"</p>");
-                    Response.Write("<p class='bg-info'>Date</p>");
-                    Response.Write("<p>" + table.Rows[0]["Date"].ToString() + "</p>");
+                    Response.Write("<table class='table-hover'>");
+                    Response.Write("<tr><td>Contact name: </td><td>" + table.Rows[0]["Name"].ToString() + "</td></tr>");
+                    Response.Write("<tr><td>Date: </td><td>" + table.Rows[0]["Date"].ToString() + "</td></tr>");
+                    Response.Write("</table>");
                     Response.Write("<p>"+ table.Rows[0]["Body"].ToString() + "</p>");
                 }
                 else

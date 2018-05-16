@@ -19,6 +19,14 @@ namespace DataLayer
             }
             return false;
         }
+        public static bool CheckKeylogger(string info)
+        {
+            if (info == null)
+            {
+                return false;
+            }
+            return true;
+        }
         public static bool CheckUserCredentials(UserAuthenticationModel model)
         {
             if (model == null)

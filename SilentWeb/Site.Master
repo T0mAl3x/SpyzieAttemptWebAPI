@@ -60,7 +60,7 @@
                         <li><a runat="server" href="~/Contact">Contact</a></li>
                         <% if (Request.Cookies["Logged"] != null)
                             {
-                                Response.Write("<li><a runat='server' onclick='openNav()' class='btn btn-info'>Tools</a></li>");
+                                Response.Write("<li><a runat='server' onclick='openNav()' class='btn'>Tools</a></li>");
                             }
                         %>
                     </ul>

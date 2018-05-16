@@ -178,7 +178,7 @@
     <Content Include="MyCss\chat.css" />
     <Content Include="MyCss\navbar.css" />
     <Content Include="MyScripts\navbar.js" />
-    <Content Include="Pictures\load.gif" />
+    <Content Include="Pictures\loading.gif" />
     <Content Include="Pictures\logo.ico" />
     <Content Include="Pictures\user.png" />
     <Content Include="Register.aspx" />

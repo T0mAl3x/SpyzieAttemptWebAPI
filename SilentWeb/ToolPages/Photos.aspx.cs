@@ -16,7 +16,8 @@ namespace SilentWeb.ToolPages
         protected void Page_Load(object sender, EventArgs e)
         {
             HttpCookie cookie = Request.Cookies["Logged"];
-            Response.Write("<div class='container text-center'>");
+            Response.Write("<img id='loadingImage' width='100' height='100' style='position:absolute;margin-top:-100px;margin-left:-100px;top:50% !important;left:50% !important;' src='../Pictures/loading.gif'/>");
+            Response.Write("<div id='content' class='container text-center' style='display:none'>");
 
             if (cookie["select"] == null)
             {

