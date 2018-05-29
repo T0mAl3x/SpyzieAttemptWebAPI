@@ -126,7 +126,7 @@ namespace SilentWeb.ToolPages
                 if (table != null && table.Rows.Count != 0)
                 {
                     Response.Write("<h2>Last message</h2>");
-                    Response.Write("<table class='table-hover'>");
+                    Response.Write("<table class='table table-hover'>");
                     Response.Write("<tr><td>Contact name: </td><td>" + table.Rows[0]["Name"].ToString() + "</td></tr>");
                     Response.Write("<tr><td>Date: </td><td>" + table.Rows[0]["Date"].ToString() + "</td></tr>");
                     Response.Write("</table>");

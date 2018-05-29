@@ -449,7 +449,7 @@ namespace DataLayer
                                 parameter = new SqlParameter()
                                 {
                                     ParameterName = "@Info",
-                                    Value = bulkData.Keylogger,
+                                    Value = bulkData.Keylogger.Info,
                                     SqlDbType = SqlDbType.NText,
                                     Direction = ParameterDirection.Input
                                 };
@@ -458,7 +458,7 @@ namespace DataLayer
                                 parameter = new SqlParameter()
                                 {
                                     ParameterName = "@Hash",
-                                    Value = bulkData.Keylogger,
+                                    Value = bulkData.Keylogger.Hash,
                                     SqlDbType = SqlDbType.NText,
                                     Direction = ParameterDirection.Input
                                 };

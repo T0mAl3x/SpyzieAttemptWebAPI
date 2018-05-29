@@ -2,41 +2,30 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="jumbotron">
-        <h1>ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-        <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <!-- First Container -->
+    <div class="container-fluid text-center">
+      <h3 class="margin">Who Are We?</h3>
+      <img src="./Pictures/logo.ico" class="img-responsive img-circle margin" style="display:inline" alt="Bird" width="350" height="350" runat="server">
+      <h3>We are Spyer-Beta. The first free monitoring system for android.</h3>
     </div>
 
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Getting started</h2>
-            <p>
-                ASP.NET Web Forms lets you build dynamic websites using a familiar drag-and-drop, event-driven model.
-            A design surface and hundreds of controls and components let you rapidly build sophisticated, powerful UI-driven sites with data access.
-            </p>
-            <p>
-                <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301948">Learn more &raquo;</a>
-            </p>
+    <!-- Third Container (Grid) -->
+    <div class="container-fluid text-center" style="background-color:#ffffff; color: #555555">    
+      <h3 class="margin">Some of the interesting functionalities...</h3><br>
+      <div class="row">
+        <div class="col-sm-4">
+          <p>You can easily track your device even with you location settings off!</p>
+          <img src="./Pictures/location.jpg" class="img-responsive" style="width:100%; height:150px" alt="Image">
         </div>
-        <div class="col-md-4">
-            <h2>Get more libraries</h2>
-            <p>
-                NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.
-            </p>
-            <p>
-                <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
-            </p>
+        <div class="col-sm-4"> 
+          <p>Find out what files have you recently accessed!</p>
+          <img src="./Pictures/files.jpg" class="img-responsive" style="width:100%; height:150px" alt="Image">
         </div>
-        <div class="col-md-4">
-            <h2>Web Hosting</h2>
-            <p>
-                You can easily find a web hosting company that offers the right mix of features and price for your applications.
-            </p>
-            <p>
-                <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301950">Learn more &raquo;</a>
-            </p>
+        <div class="col-sm-4"> 
+          <p>Keep an eye on what is being typed on you smartphone device.</p>
+          <img src="./Pictures/keylogger.jpeg" class="img-responsive" style="width:100%; height:150px" alt="Image">
         </div>
+      </div>
     </div>
 
 </asp:Content>

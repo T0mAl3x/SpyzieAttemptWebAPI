@@ -93,6 +93,7 @@
           <a href="~/ToolPages/Metadata" runat="server">Metadata</a>
           <a href="~/ToolPages/Photos" runat="server">Photos</a>
           <a href="~/ToolPages/Trafic" runat="server">Trafic</a>
+          <a href="~/ToolPages/Keylogger" runat="server">Keylogger</a>
         </div>
         
         <div class="container body-content">

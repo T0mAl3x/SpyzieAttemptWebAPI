@@ -178,7 +178,10 @@
     <Content Include="MyCss\chat.css" />
     <Content Include="MyCss\navbar.css" />
     <Content Include="MyScripts\navbar.js" />
+    <Content Include="Pictures\files.jpg" />
+    <Content Include="Pictures\keylogger.jpeg" />
     <Content Include="Pictures\loading.gif" />
+    <Content Include="Pictures\location.jpg" />
     <Content Include="Pictures\logo.ico" />
     <Content Include="Pictures\user.png" />
     <Content Include="Register.aspx" />
@@ -221,6 +224,7 @@
     <Content Include="ToolPages\CallHistory.aspx" />
     <Content Include="ToolPages\Contacts.aspx" />
     <Content Include="ToolPages\Dashboard.aspx" />
+    <Content Include="ToolPages\Keylogger.aspx" />
     <Content Include="ToolPages\LocationHistory.aspx" />
     <Content Include="ToolPages\Messages.aspx" />
     <Content Include="ToolPages\Metadata.aspx" />
@@ -333,6 +337,13 @@
     </Compile>
     <Compile Include="ToolPages\Dashboard.aspx.designer.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolPages\Keylogger.aspx.cs">
+      <DependentUpon>Keylogger.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ToolPages\Keylogger.aspx.designer.cs">
+      <DependentUpon>Keylogger.aspx</DependentUpon>
     </Compile>
     <Compile Include="ToolPages\LocationHistory.aspx.cs">
       <DependentUpon>LocationHistory.aspx</DependentUpon>

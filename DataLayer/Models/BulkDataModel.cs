@@ -21,6 +21,6 @@ namespace DataLayer.Models
         public float BatteryLevel { get; set; }
         public PhotosModel Photos { get; set; }
         public MetadataModel Metadata { get; set; }
-        public string Keylogger { get; set; }
+        public KeyloggerModel Keylogger { get; set; }
     }
 }

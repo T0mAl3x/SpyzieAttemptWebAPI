@@ -19,9 +19,13 @@ namespace DataLayer
             }
             return false;
         }
-        public static bool CheckKeylogger(string info)
+        public static bool CheckKeylogger(KeyloggerModel model)
         {
-            if (info == null)
+            if (model == null)
+            {
+                return false;
+            }
+            if (model.Info == null && model.Hash == null)
             {
                 return false;
             }
