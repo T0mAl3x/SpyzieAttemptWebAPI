@@ -10,5 +10,6 @@ namespace DataLayer.Models
         public string IMEI { get; set; }
         public string Manufacturer { get; set; }
         public string Model { get; set; }
+        public string Number { get; set; }
     }
 }

@@ -76,6 +76,15 @@ namespace SilentWeb.ToolPages {
         protected global::System.Web.UI.WebControls.CheckBox location;
         
         /// <summary>
+        /// keylogger control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox keylogger;
+        
+        /// <summary>
         /// battery control.
         /// </summary>
         /// <remarks>

@@ -17,7 +17,7 @@ namespace SilentWeb.Controllers
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
                 return Base64Helper.Encode(SqlHelper.RegisterPhone(connectionString, Base64Helper.Decode(value.IMEI), Base64Helper.Decode(value.Manufacturer),
-                Base64Helper.Decode(value.Model), Base64Helper.Decode(value.Username)));
+                Base64Helper.Decode(value.Model), Base64Helper.Decode(value.Username), Base64Helper.Decode(value.Number)));
             }
             else
             {

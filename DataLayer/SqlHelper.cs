@@ -8,7 +8,7 @@ namespace DataLayer
 {
     public class SqlHelper
     {
-        public static string RegisterPhone(string connectionString, string IMEI, string manufacturer, string model, string username)
+        public static string RegisterPhone(string connectionString, string IMEI, string manufacturer, string model, string username, string number)
         {
             using (SqlCommand command = new SqlCommand("PhoneRegistration"))
             {
@@ -62,6 +62,15 @@ namespace DataLayer
                         {
                             ParameterName = "@Username",
                             Value = username,
+                            SqlDbType = SqlDbType.NVarChar,
+                            Direction = ParameterDirection.Input
+                        };
+                        command.Parameters.Add(parameter);
+
+                        parameter = new SqlParameter()
+                        {
+                            ParameterName = "@Number",
+                            Value = number,
                             SqlDbType = SqlDbType.NVarChar,
                             Direction = ParameterDirection.Input
                         };
@@ -241,7 +250,7 @@ namespace DataLayer
                         SqlParameter parameter = new SqlParameter()
                         {
                             ParameterName = "@UserMask",
-                            Size = 8,
+                            Size = 9,
                             SqlDbType = SqlDbType.NVarChar,
                             Direction = ParameterDirection.Output
                         };

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -26,7 +27,59 @@ namespace SilentWeb.ToolPages
             else
             {
                 string connectionString = ConfigurationManager.ConnectionStrings["SilentConnection"].ConnectionString;
-                DataTable table = SqlHelper.GetSpecificInformation(connectionString, cookie["select"], "GetMostCalled");
+                
+
+                String graphVizString = Graphviz.GenerateInput(connectionString, cookie["username"]);
+                Bitmap bm = new Bitmap(Graphviz.RenderImage(graphVizString, "jpg"));
+                ImageConverter converter = new ImageConverter();
+                Response.Write("<img style='display:block;margin:0 auto;' src='data:image/png;base64, " + Convert.ToBase64String((byte[])converter.ConvertTo(bm, typeof(byte[]))) + "'/></span>");
+
+                DataTable table;
+                DataTable tableNr = SqlHelper.GetSpecificInformation(connectionString, cookie["username"], "GetRegisteredPhones");
+                Response.Write("<div class='row'>");
+                Response.Write("<div class='col-md-12'>");
+                Response.Write("<div class='jumbotron'>");
+                if (tableNr != null && tableNr.Rows.Count != 0)
+                {
+                    Response.Write("<h2>Contact agenda between registered smartphones</h2>");
+                    Response.Write("<br>");
+                    foreach (DataRow row in tableNr.Rows)
+                    {
+                        Response.Write("<h4>"+ row["Manufacturer"].ToString() + " " + row["Model"].ToString() + " " + row["IMEI"].ToString() +"</h4>");
+                        table = SqlHelper.GetSpecificInformation(connectionString, row["IMEI"].ToString(), "CompareContacts");
+                        Response.Write("<table class='table table-hover table-responsive'>");
+                        Response.Write("<thead><tr><th>Manufacturer</th><th>Model</th><th>IMEI</th><th>Check</th></tr></thead>");
+                        Response.Write("<tbody>");
+                        foreach (DataRow roww in table.Rows)
+                        {
+                            Response.Write("<tr class='success'>");
+                            Response.Write("<td>" + roww["Manufacturer"].ToString() + "</td>");
+                            Response.Write("<td>" + roww["Model"].ToString() + "</td>");
+                            Response.Write("<td>" + roww["IMEI"].ToString() + "</td>");
+                            if (roww["Checkk"].ToString() == "1")
+                            {
+                                Response.Write("<td><img width='30' height='30' src='../Pictures/check.png'/></td>");
+                            }
+                            else
+                            {
+                                Response.Write("<td><img width='30' height='30' src='../Pictures/X.png'/></td>");
+                            }
+                            Response.Write("</tr>");
+                        }
+                        Response.Write("</tbody>");
+                        Response.Write("</table>");
+                    }
+                }
+                else
+                {
+                    Response.Write("<div class='alert alert-warning'><strong>Info!</strong>You don't have any phones registered.</div>");
+                }
+                Response.Write("</div>");
+                Response.Write("</div>");
+                Response.Write("</div>");
+
+
+                table = SqlHelper.GetSpecificInformation(connectionString, cookie["select"], "GetMostCalled");
 
                 Response.Write("<div class='row'>");
                 Response.Write("<div class='col-md-6'>");
@@ -46,7 +99,7 @@ namespace SilentWeb.ToolPages
                         Response.Write("<td>" + row["Number"].ToString() + "</td>");
                         Response.Write("</tr>");
                         counter++;
-                        if (counter == 4)
+                        if (counter == 5)
                         {
                             break;
                         }
@@ -78,7 +131,7 @@ namespace SilentWeb.ToolPages
                         Response.Write("<td>" + row["Number"].ToString() + "</td>");
                         Response.Write("</tr>");
                         counter++;
-                        if (counter == 4)
+                        if (counter == 5)
                         {
                             break;
                         }

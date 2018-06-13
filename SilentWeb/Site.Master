@@ -96,7 +96,7 @@
           <a href="~/ToolPages/Keylogger" runat="server">Keylogger</a>
         </div>
         
-        <div class="container body-content">
+        <div class="container body-content" >
                     <asp:ContentPlaceHolder ID="MainContent" runat="server">
                     </asp:ContentPlaceHolder>
             <hr />

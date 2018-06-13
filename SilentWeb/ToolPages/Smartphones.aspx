@@ -18,6 +18,7 @@
             <div class="checkbox"><asp:CheckBox ID="trafic" runat="server" />Trafic</div>
             <div class="checkbox"><asp:CheckBox ID="apps" runat="server" />Apps</div>
             <div class="checkbox"><asp:CheckBox ID="location" runat="server" />Location</div>
+            <div class="checkbox"><asp:CheckBox ID="keylogger" runat="server" />Keylogger</div>
             <div class="checkbox"><asp:CheckBox ID="battery" runat="server" />Battery</div>
             <br />
             <asp:Button runat="server" Text="Submit" CssClass="btn btn-success" OnClick="Submit" />
